@@ -1,4 +1,6 @@
-import {throttle, abs, select, isMobile} from '../../general';
+import {throttle, abs, select} from '../../general';
+
+import {isMobile} from 'pixi.js/lib/core/utils';
 
 import screenfull from 'screenfull';
 
