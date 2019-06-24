@@ -32,6 +32,10 @@ function Symbol(view) {
         set y(newY) {
             view.y = newY;
         },
+
+        get height() {
+            return view.height;
+        },
     };
 }
 
@@ -44,9 +48,20 @@ function Reel(view) {
     let pos = 0;
     let vPos = 0;
 
+    const height = view.height;
+    const criticalValue = divide(view.height, 2);
+
     const it = {
         get symbols() {
             return symbols;
+        },
+
+        get height() {
+            return height;
+        },
+
+        get criticalValue() {
+            return criticalValue;
         },
 
         get vPos() {
@@ -70,6 +85,10 @@ function update(reel) {
     reel.symbols
         .forEach((symbol) => {
             symbol.y += symbol.stepSize * reel.vPos;
+
+            if (symbol.y >= reel.criticalValue) {
+                symbol.y -= reel.height;
+            }
         });
 }
 
