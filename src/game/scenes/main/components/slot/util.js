@@ -1,4 +1,3 @@
-
 export function isReel({name}) {
     return name.includes('reel');
 }
@@ -12,17 +11,24 @@ export function isResult({name}) {
 }
 
 export function TextureManager(symbolConfig) {
-    const {textures} = app.resource.get('symbols');
-
-    const mapping =
-        symbolConfig
-            .map(({id, texture}) =>
-                ({id, texture: textures[texture]}));
+    let config = undefined;
 
     return {getTexture};
 
+    function mapping() {
+        const {textures} = app.resource.get('symbols');
+
+        if (!config) {
+            config =
+                symbolConfig.map(({id, texture}) =>
+                    ({id, texture: textures[texture]}));
+        }
+
+        return config;
+    }
+
     function getTexture(iconId) {
-        return mapping
+        return mapping()
             .find(({id}) => id === iconId)
             .texture;
     }

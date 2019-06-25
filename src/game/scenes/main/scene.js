@@ -4,11 +4,14 @@ import {SlotMachine} from './components/slot';
 import anime from 'animejs';
 import {wait, ceil} from '../../../general';
 
-export function create() {
+export function create({normalTable}) {
     const create = addPackage(app, 'main');
     const scene = create('MainScene');
 
-    const slot = SlotMachine(scene);
+    const slot = SlotMachine({
+        view: scene,
+        tables: normalTable,
+    });
 
     window.slot = slot;
     window.play = play;
