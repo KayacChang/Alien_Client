@@ -1,6 +1,6 @@
 import {isReel, isSymbol} from './util';
 
-import {divide, nth} from '../../../../../general';
+import {divide, nth, sign, abs} from '../../../../../general';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
 
@@ -32,20 +32,20 @@ export function SlotMachine({view, tables}) {
     };
 }
 
-function Symbol(view, index) {
+function Symbol(view, pos) {
     const stepSize =
         divide(view.height, stopPerSymbol);
 
-    index = Number(view.name.split('@')[1]);
+    pos = Number(view.name.split('@')[1]);
 
-    let icon = index;
+    let icon = pos;
 
     return {
-        get index() {
-            return index;
+        get pos() {
+            return pos;
         },
-        set index(newIndex) {
-            index = newIndex;
+        set pos(newPos) {
+            pos = newPos;
         },
         get stepSize() {
             return stepSize;
@@ -86,7 +86,7 @@ function Reel({view, table}) {
     const criticalValue = divide(view.height, 2);
 
     symbols.forEach((symbol) => {
-        symbol.icon = nth(symbol.index, table);
+        symbol.icon = nth(symbol.pos, table);
     });
 
     const it = {
@@ -131,27 +131,30 @@ function update(reel) {
         .forEach((symbol) => {
             symbol.y += symbol.stepSize * reel.vPos;
 
-            if (isDownward(reel) && getSup(reel, symbol)) {
-                symbol.y -= reel.height;
-            } else if (isUpward(reel) && getInf(reel, symbol)) {
-                symbol.y += reel.height;
+            if (detectBound(reel, symbol)) {
+                const signVal = sign(reel.vPos);
+                swapSymbol(reel, symbol, signVal);
+                updateSymbolPos(reel, symbol, signVal);
+                updateSymbolIcon(reel, symbol);
+                //
             }
         });
 }
 
-function isDownward(reel) {
-    return reel.vPos > 0;
+function swapSymbol(reel, symbol, sign) {
+    symbol.y -= (sign) * reel.height;
 }
 
-function getSup(reel, symbol) {
-    return symbol.y - reel.criticalValue >= 0;
+function updateSymbolPos(reel, symbol, sign) {
+    const diff = sign * reel.symbols.length;
+    symbol.pos = (symbol.pos + diff) % reel.table.length;
 }
 
-function isUpward(reel) {
-    return reel.vPos < 0;
+function updateSymbolIcon(reel, symbol) {
+    symbol.icon = nth(symbol.pos, reel.table);
 }
 
-function getInf(reel, symbol) {
-    return symbol.y + reel.criticalValue <= 0;
+function detectBound(reel, symbol) {
+    return abs(symbol.y) >= reel.criticalValue;
 }
 

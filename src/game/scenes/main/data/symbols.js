@@ -2,7 +2,7 @@ import SYMBOLS from '../assets/symbols/symbols.json';
 import '../assets/symbols/symbols.png';
 
 export const symbolConfig = [
-    {id: 0, name: 'alien', texture: 'Aliens.png'},
+    {id: 0, name: 'alien', texture: 'Alien.png'},
     {id: 1, name: 'wild@5x', texture: 'Wildx5.png'},
     {id: 2, name: 'wild@3x', texture: 'Wildx3.png'},
     {id: 3, name: 'wild@2x', texture: 'Wildx2.png'},

@@ -24,11 +24,11 @@ export function create({normalTable}) {
             .timeline({targets})
             .add({
                 pos: '-=' + 0.25,
-                duration: 500,
-                easing: 'easeOutQuad',
+                duration: 750,
+                easing: 'easeOutBack',
             })
             .add({
-                pos: '+=' + 100.25,
+                pos: '+=' + 120.25,
                 duration: 10000,
                 easing: 'easeOutQuad',
             });
@@ -37,10 +37,17 @@ export function create({normalTable}) {
 
         anime.remove(targets);
 
-        anime({
-            targets,
-            pos: ceil(targets.pos) + 2,
-            duration: 750,
-        });
+        anime
+            .timeline({targets})
+            // .add({
+            //     pos: ceil(targets.pos) + 2,
+            //     duration: 750,
+            // })
+            .add({
+                targets,
+                pos: ceil(targets.pos) + 2,
+                easing: 'easeOutBack',
+                duration: 750,
+            });
     }
 }
