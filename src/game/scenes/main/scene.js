@@ -39,10 +39,6 @@ export function create({normalTable}) {
 
         anime
             .timeline({targets})
-            // .add({
-            //     pos: ceil(targets.pos) + 2,
-            //     duration: 750,
-            // })
             .add({
                 targets,
                 pos: ceil(targets.pos) + 2,

@@ -1,9 +1,10 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import {log, select} from './general';
+import {select, remove} from './general';
 
 import {App} from './system/application';
 import {Service} from './service/00';
+import {enableFullScreenMask} from './system/modules/screen';
 
 async function main() {
     //  Init App
@@ -14,11 +15,22 @@ async function main() {
 
         app.service = new Service();
 
-        // TODO: move to load scene
-        app.on('loading', ({progress}, {name}) => {
-            log(`Progress: ${progress} %`);
-            log(`Resource: ${name}`);
-        });
+        // Import Load Scene
+        const LoadScene = await import('./game/scenes/load/scene');
+
+        await app.resource.load(LoadScene);
+
+        const comp = select('#app');
+        const svg = select('#preload');
+        remove(svg);
+
+        comp.prepend(app.view);
+
+        const loadScene = LoadScene.create();
+        app.stage.addChild(loadScene);
+        app.resize();
+
+        enableFullScreenMask();
 
         await app.service.login();
 
@@ -35,14 +47,16 @@ async function main() {
 
         app.stage.addChildAt(scene, 0);
 
-        const comp = select('#app');
-        const svg = select('#preload');
-        svg.remove();
-        comp.prepend(app.view);
+        app.stage.removeChild(loadScene);
+
+        select('script').forEach(remove);
 
         app.resize();
 
+        // document.title = translate('title');
+
         app.emit('Idle');
+        //
     } catch (error) {
         console.error(error);
 
