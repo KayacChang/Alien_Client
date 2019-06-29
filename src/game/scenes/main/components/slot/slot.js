@@ -1,6 +1,6 @@
 import {isReel, isSymbol} from './util';
 
-import {divide, nth, sign, abs} from '../../../../../general';
+import {divide, nth, sign, abs, floor} from '../../../../../general';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
 
@@ -32,21 +32,32 @@ export function SlotMachine({view, tables}) {
     };
 }
 
-function Symbol(view, pos) {
+function Symbol(view) {
     const stepSize =
         divide(view.height, stopPerSymbol);
 
-    pos = Number(view.name.split('@')[1]);
+    let displayPos = floor(divide(view.y, stepSize));
+
+    let pos = Number(view.name.split('@')[1]);
 
     let icon = pos;
 
     return {
+        get name() {
+            return view.name;
+        },
+
         get pos() {
             return pos;
         },
         set pos(newPos) {
             pos = newPos;
         },
+
+        get displayPos() {
+            return displayPos;
+        },
+
         get stepSize() {
             return stepSize;
         },
@@ -56,6 +67,8 @@ function Symbol(view, pos) {
         },
         set y(newY) {
             view.y = newY;
+
+            displayPos = floor(divide(newY, stepSize));
         },
 
         get height() {
