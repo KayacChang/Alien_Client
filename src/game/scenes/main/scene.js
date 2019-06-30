@@ -2,7 +2,7 @@ import {addPackage} from 'pixi_fairygui';
 import {SlotMachine} from './components/slot';
 
 import anime from 'animejs';
-import {wait, floor} from '../../../general';
+import {wait, floor, abs} from '../../../general';
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -18,7 +18,7 @@ export function create({normalTable}) {
 
     return scene;
 
-    async function play(icon = 0) {
+    async function play(icon) {
         const targets = slot.reels[0];
         anime
             .timeline({targets})
@@ -35,16 +35,25 @@ export function create({normalTable}) {
 
         await wait(3000);
 
-        targets.symbols
-            .find(({displayPos}) => displayPos < -2)
-            .icon = icon;
+        const tarSymbol =
+            targets.symbols
+                .reduce((a, b) =>
+                    a.displayPos < b.displayPos ? a : b);
+
+        let tarPos = abs(tarSymbol.displayPos);
+
+        if (icon !== 8) {
+            tarSymbol.icon = icon;
+        } else {
+            tarPos += 1;
+        }
 
         anime.remove(targets);
         anime
             .timeline({targets})
             .add({
                 targets,
-                pos: floor(targets.pos) + 3,
+                pos: floor(targets.pos) + tarPos,
                 easing: 'easeOutBack',
                 duration: 750,
             });

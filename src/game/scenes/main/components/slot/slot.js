@@ -4,14 +4,18 @@ import {divide, nth, sign, abs, floor} from '../../../../../general';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
 
-function getTexture(icon) {
-    const {textures} = app.resource.get('symbols');
+function Texture(icon) {
+    if (!Texture.config) {
+        const {textures} = app.resource.get('symbols');
 
-    const config =
-        symbolConfig.map(({id, texture}) =>
-            ({id, texture: textures[texture]}));
+        Texture.config =
+            symbolConfig
+                .filter(({texture}) => texture)
+                .map(({id, texture}) =>
+                    ({id, texture: textures[texture]}));
+    }
 
-    return config
+    return Texture.config
         .find(({id}) => id === icon)
         .texture;
 }
@@ -79,7 +83,7 @@ function Symbol(view) {
             return icon;
         },
         set icon(id) {
-            view.texture = getTexture(id);
+            view.texture = Texture(id);
             icon = id;
         },
     };

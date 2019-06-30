@@ -10,6 +10,7 @@ export const symbolConfig = [
     {id: 5, name: 'bar@3', texture: 'Bar3.png'},
     {id: 6, name: 'bar@2', texture: 'Bar2.png'},
     {id: 7, name: 'bar@1', texture: 'Bar1.png'},
+    {id: 8, name: 'empty'},
 ];
 
 export const symbols = [

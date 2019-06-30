@@ -159,6 +159,7 @@ module.exports = function(env) {
             //  Module Bundle like Roll up
             new ModuleConcatenationPlugin(),
 
+            //  Cache
             new HashedModuleIdsPlugin(),
 
             //  HTML
