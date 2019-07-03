@@ -179,12 +179,5 @@ function update(reel) {
 
             symbol.y =
                 reel.offsetY + (symbol.displayPos * symbol.stepSize);
-
-            if (reel.name === 'reel@2' && reel.pos === 40) {
-                console.log(pos);
-                console.log(displayPos);
-                console.log(symbol.y);
-                debugger;
-            }
         });
 }

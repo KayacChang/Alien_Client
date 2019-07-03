@@ -1,12 +1,13 @@
 import {addPackage} from 'pixi_fairygui';
 import {SlotMachine} from './components/slot';
 
-import anime from 'animejs';
-import {wait} from '../../../general';
-
 import {extras} from 'pixi.js';
 
 const {BitmapText} = extras;
+
+import {spin} from './logic';
+
+import {symbolConfig} from './data';
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -19,17 +20,28 @@ export function create({normalTable}) {
 
     const scores =
         scene.children
-            .filter(({name}) => name.includes('pos'))
-            .map(({x, y}) => {
+            .filter(({name}) => name && name.includes('pos'))
+            .map(({name, x, y}) => {
+                const style =
+                    (name.includes('jackpot')) ?
+                        {font: '30px Score'} : {font: '30px Score'};
+
                 const score =
-                    new BitmapText('$1,234,567,890', {font: '22px Score'});
+                    new BitmapText('$120,640,000', style);
 
                 score.position.set(x, y);
+
+                if (!name.includes('jackpot')) score.scale.set(0.9, 0.8);
 
                 return score;
             });
 
     scene.addChild(...scores);
+
+    const effects =
+        scene.children
+            .filter(({name}) => name && name.includes('effect'))
+            .sort((a, b) => id(a) - id(b));
 
     window.slot = slot;
     window.play = play;
@@ -37,56 +49,28 @@ export function create({normalTable}) {
     return scene;
 
     async function play(icons) {
-        for (const reel of slot.reels) {
-            anime
-                .timeline({
-                    targets: reel,
-                    easing: 'easeOutQuad',
-                })
-                .add({
-                    pos: '-=' + 0.25,
-                    duration: 500,
-                })
-                .add({
-                    pos: '+=' + 100,
-                    duration: 10000,
-                });
+        await spin(slot.reels, icons);
 
-            await wait(250);
-        }
-
-        await wait(3000);
-
-        const tasks = [];
-        for (const reel of slot.reels) {
-            const index =
-                slot.reels.indexOf(reel);
-
-            anime.remove(reel);
-
-            const displaySymbol =
-                reel.symbols
-                    .reduce((a, b) => a.displayPos < b.displayPos ? a : b);
-
-            const task =
-                anime({
-                    targets: reel,
-                    pos: '+=' + (2 - displaySymbol.displayPos),
-                    easing: 'easeOutBack',
-                    duration: 750,
-
-                    begin() {
-                        displaySymbol.icon = icons[index];
-                    },
-                })
-                    .finished;
-
-            tasks.push(task);
-
-            await wait(250);
-        }
-
-        await Promise.all(tasks);
-        slot.reels.forEach((reel) => reel.pos = 0);
+        result(icons);
     }
+
+    function result(icons) {
+        icons.forEach((icon, index) => {
+            const {name} = symbolConfig.find(({id}) => id === icon);
+
+            const tar = effects[index].getChildByName(name);
+
+            tar.visible = true;
+            tar.transition['anim'].restart();
+
+            app.on('SpinStart', () => {
+                tar.visible = false;
+                tar.transition['anim'].pause();
+            });
+        });
+    }
+}
+
+function id({name}) {
+    return Number(name.split('@')[1]);
 }
