@@ -1,24 +1,8 @@
 import {isReel, isSymbol} from './util';
 
-import {divide, nth, sign, abs, floor} from '../../../../../general';
+import {divide, nth, mod, round, floor} from '../../../../../general';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
-
-function Texture(icon) {
-    if (!Texture.config) {
-        const {textures} = app.resource.get('symbols');
-
-        Texture.config =
-            symbolConfig
-                .filter(({texture}) => texture)
-                .map(({id, texture}) =>
-                    ({id, texture: textures[texture]}));
-    }
-
-    return Texture.config
-        .find(({id}) => id === icon)
-        .texture;
-}
 
 export function SlotMachine({view, tables}) {
     const reels =
@@ -36,34 +20,54 @@ export function SlotMachine({view, tables}) {
     };
 }
 
-function Symbol(view) {
+function Texture(icon) {
+    if (!Texture.config) {
+        const {textures} = app.resource.get('symbols');
+
+        Texture.config =
+            symbolConfig
+                .filter(({texture}) => texture)
+                .map(({id, texture}) =>
+                    ({id, texture: textures[texture]}));
+    }
+
+    return Texture.config
+        .find(({id}) => id === icon)
+        .texture;
+}
+
+function Symbol(view, index) {
     const stepSize =
         divide(view.height, stopPerSymbol);
 
-    let displayPos = floor(divide(view.y, stepSize));
+    const initPos = index * stopPerSymbol;
+    let displayPos = initPos;
 
-    let pos = Number(view.name.split('@')[1]);
-
-    let icon = pos;
+    let idx = Number(view.name.split('@')[1]);
+    let icon = idx;
 
     return {
         get name() {
             return view.name;
         },
 
-        get pos() {
-            return pos;
+        get height() {
+            return view.height;
         },
-        set pos(newPos) {
-            pos = newPos;
+
+        get stepSize() {
+            return stepSize;
+        },
+
+        get initPos() {
+            return initPos;
         },
 
         get displayPos() {
             return displayPos;
         },
-
-        get stepSize() {
-            return stepSize;
+        set displayPos(newPos) {
+            displayPos = newPos;
         },
 
         get y() {
@@ -71,12 +75,13 @@ function Symbol(view) {
         },
         set y(newY) {
             view.y = newY;
-
-            displayPos = floor(divide(newY, stepSize));
         },
 
-        get height() {
-            return view.height;
+        get idx() {
+            return idx;
+        },
+        set idx(newIdx) {
+            idx = newIdx;
         },
 
         get icon() {
@@ -93,30 +98,44 @@ function Reel({view, table}) {
     const symbols =
         view.children
             .filter(isSymbol)
-            .map(Symbol)
-            .sort((a, b) => a.index - b.index);
+            .sort((a, b) => a.y - b.y)
+            .map(Symbol);
+
+    const offsetY = symbols[0].y;
 
     let pos = 0;
-    let vPos = 0;
 
-    const height = view.height;
-    const criticalValue = divide(view.height, 2);
+    const initIdx =
+        symbols
+            .reduce((a, b) => a.idx > b.idx ? a : b)
+            .idx;
+
+    const displayLength =
+        symbols.length * stopPerSymbol;
 
     symbols.forEach((symbol) => {
-        symbol.icon = nth(symbol.pos, table);
+        symbol.icon = nth(symbol.idx, table);
     });
 
-    const it = {
+    const reel = {
+        get name() {
+            return view.name;
+        },
+
         get symbols() {
             return symbols;
         },
 
-        get height() {
-            return height;
+        get displayLength() {
+            return displayLength;
         },
 
-        get criticalValue() {
-            return criticalValue;
+        get offsetY() {
+            return offsetY;
+        },
+
+        get initIdx() {
+            return initIdx;
         },
 
         get table() {
@@ -126,52 +145,46 @@ function Reel({view, table}) {
             table = newTable;
         },
 
-        get vPos() {
-            return vPos;
-        },
-
         get pos() {
             return pos;
         },
         set pos(newPos) {
-            vPos = newPos - pos;
-            pos = newPos;
-            update(it);
+            pos = mod(newPos, table.length);
+            update(reel);
         },
     };
 
-    return it;
+    return reel;
 }
 
 function update(reel) {
     reel.symbols
         .forEach((symbol) => {
-            symbol.y += symbol.stepSize * reel.vPos;
+            const pos =
+                mod(reel.pos + symbol.initPos, reel.table.length);
 
-            if (detectBound(reel, symbol)) {
-                const signVal = sign(reel.vPos);
-                swapSymbol(reel, symbol, signVal);
-                updateSymbolPos(reel, symbol, signVal);
-                updateSymbolIcon(reel, symbol);
-                //
+            const displayPos =
+                mod(pos, reel.displayLength);
+
+            const swap =
+                round(symbol.displayPos - displayPos) >= reel.displayLength;
+
+            if (swap) {
+                const id = divide(floor(reel.pos), 2) + reel.initIdx;
+
+                symbol.icon = nth(id, reel.table);
+            }
+
+            symbol.displayPos = displayPos;
+
+            symbol.y =
+                reel.offsetY + (symbol.displayPos * symbol.stepSize);
+
+            if (reel.name === 'reel@2' && reel.pos === 40) {
+                console.log(pos);
+                console.log(displayPos);
+                console.log(symbol.y);
+                debugger;
             }
         });
 }
-
-function swapSymbol(reel, symbol, sign) {
-    symbol.y -= (sign) * reel.height;
-}
-
-function updateSymbolPos(reel, symbol, sign) {
-    const diff = sign * reel.symbols.length;
-    symbol.pos = (symbol.pos + diff) % reel.table.length;
-}
-
-function updateSymbolIcon(reel, symbol) {
-    symbol.icon = nth(symbol.pos, reel.table);
-}
-
-function detectBound(reel, symbol) {
-    return abs(symbol.y) >= reel.criticalValue;
-}
-

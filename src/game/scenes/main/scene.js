@@ -2,7 +2,11 @@ import {addPackage} from 'pixi_fairygui';
 import {SlotMachine} from './components/slot';
 
 import anime from 'animejs';
-import {wait, floor, abs} from '../../../general';
+import {wait} from '../../../general';
+
+import {extras} from 'pixi.js';
+
+const {BitmapText} = extras;
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -13,49 +17,76 @@ export function create({normalTable}) {
         tables: normalTable,
     });
 
+    const scores =
+        scene.children
+            .filter(({name}) => name.includes('pos'))
+            .map(({x, y}) => {
+                const score =
+                    new BitmapText('$1,234,567,890', {font: '22px Score'});
+
+                score.position.set(x, y);
+
+                return score;
+            });
+
+    scene.addChild(...scores);
+
     window.slot = slot;
     window.play = play;
 
     return scene;
 
-    async function play(icon) {
-        const targets = slot.reels[0];
-        anime
-            .timeline({targets})
-            .add({
-                pos: '-=' + 0.25,
-                duration: 750,
-                easing: 'easeOutBack',
-            })
-            .add({
-                pos: '+=' + 120.25,
-                duration: 10000,
-                easing: 'easeOutQuad',
-            });
+    async function play(icons) {
+        for (const reel of slot.reels) {
+            anime
+                .timeline({
+                    targets: reel,
+                    easing: 'easeOutQuad',
+                })
+                .add({
+                    pos: '-=' + 0.25,
+                    duration: 500,
+                })
+                .add({
+                    pos: '+=' + 100,
+                    duration: 10000,
+                });
+
+            await wait(250);
+        }
 
         await wait(3000);
 
-        const tarSymbol =
-            targets.symbols
-                .reduce((a, b) =>
-                    a.displayPos < b.displayPos ? a : b);
+        const tasks = [];
+        for (const reel of slot.reels) {
+            const index =
+                slot.reels.indexOf(reel);
 
-        let tarPos = abs(tarSymbol.displayPos);
+            anime.remove(reel);
 
-        if (icon !== 8) {
-            tarSymbol.icon = icon;
-        } else {
-            tarPos += 1;
+            const displaySymbol =
+                reel.symbols
+                    .reduce((a, b) => a.displayPos < b.displayPos ? a : b);
+
+            const task =
+                anime({
+                    targets: reel,
+                    pos: '+=' + (2 - displaySymbol.displayPos),
+                    easing: 'easeOutBack',
+                    duration: 750,
+
+                    begin() {
+                        displaySymbol.icon = icons[index];
+                    },
+                })
+                    .finished;
+
+            tasks.push(task);
+
+            await wait(250);
         }
 
-        anime.remove(targets);
-        anime
-            .timeline({targets})
-            .add({
-                targets,
-                pos: floor(targets.pos) + tarPos,
-                easing: 'easeOutBack',
-                duration: 750,
-            });
+        await Promise.all(tasks);
+        slot.reels.forEach((reel) => reel.pos = 0);
     }
 }
