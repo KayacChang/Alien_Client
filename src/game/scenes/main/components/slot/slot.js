@@ -10,6 +10,16 @@ import {
 import {stopPerSymbol, symbolConfig} from '../../data';
 
 export function SlotMachine({view, tables}) {
+
+    const empty =
+        symbolConfig
+            .find(({name}) => name === 'empty')
+            .id;
+
+    tables =
+        tables.map((reelTable) =>
+            reelTable.filter((icon) => icon !== empty));
+
     const reels =
         view.children
             .filter(isReel)

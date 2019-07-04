@@ -1,19 +1,34 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import {select, remove} from './general';
+import {select, remove, fetchJSON, isProduction} from './general';
 
 import {App} from './system/application';
-import {Service} from './service/00';
+import {Service} from './service/01';
 import {enableFullScreenMask} from './system/modules/screen';
+
+import ENV_URL from './env.json';
+
+const key = process.env.KEY;
 
 async function main() {
     //  Init App
     try {
         document.title = 'For Every Gamer | 61 Studio';
 
+        const res = await fetchJSON(ENV_URL);
+
+        global.ENV = {
+            SERVICE_URL:
+                isProduction() ? res['prodServerURL'] : res['devServerURL'],
+
+            LOGIN_TYPE: res['loginType'],
+            GAME_ID: res['gameID'],
+            I18N_URL: res['i18nURL'],
+        };
+
         global.app = App();
 
-        app.service = new Service();
+        app.service = new Service(key);
 
         // Import Load Scene
         const LoadScene = await import('./game/scenes/load/scene');
@@ -32,13 +47,13 @@ async function main() {
 
         enableFullScreenMask();
 
-        await app.service.login();
+        await app.service.login({key});
 
         //  Import Main Scene
         const [MainScene, initData] =
             await Promise.all([
                 import('./game/scenes/main'),
-                app.service.init(),
+                app.service.init({key}),
             ]);
 
         await app.resource.load(MainScene);

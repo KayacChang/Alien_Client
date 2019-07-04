@@ -47,8 +47,11 @@ export function create({normalTable}) {
             .filter(({name}) => name && name.includes('effect'))
             .sort((a, b) => id(a) - id(b));
 
+    const bigWin = scene.getChildByName('bigWin');
+
     window.slot = slot;
     window.play = play;
+    window.bigWin = bigWin;
 
     return scene;
 

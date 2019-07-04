@@ -51,13 +51,13 @@ async function stop(reels, icons) {
 
         reel.pos -= displaySymbol.displayPos;
 
-        const diff =
-            (reel.pos + 2 >= reel.table.length) ? 1 : 2;
+        // const diff =
+        //     (reel.pos + 2 >= reel.table.length) ? 1 : 2;
 
         const stop =
             anime({
                 targets: reel,
-                pos: '+=' + diff,
+                pos: '+=' + 2,
                 easing: 'easeOutBack',
                 duration: 750,
             })
