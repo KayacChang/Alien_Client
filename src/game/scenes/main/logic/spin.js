@@ -6,9 +6,7 @@ export async function spin(reels, icons) {
 
     await wait(3000);
 
-    const stopped = await stop(reels, icons);
-
-    await Promise.all(stopped);
+    await stop(reels, icons);
 }
 
 async function start(reels) {
@@ -34,7 +32,10 @@ async function start(reels) {
 }
 
 async function stop(reels, icons) {
-    const tasks = [];
+    const stops = [];
+
+    const displaySymbols = [];
+
     for (const reel of reels) {
         const index = reels.indexOf(reel);
 
@@ -44,30 +45,35 @@ async function stop(reels, icons) {
             reel.symbols
                 .reduce((a, b) => a.displayPos < b.displayPos ? a : b);
 
-        const task =
+        displaySymbols.push(displaySymbol);
+
+        displaySymbol.icon = icons[index];
+
+        reel.pos -= displaySymbol.displayPos;
+
+        const diff =
+            (reel.pos + 2 >= reel.table.length) ? 1 : 2;
+
+        const stop =
             anime({
                 targets: reel,
-                pos: '+=' + (2 - displaySymbol.displayPos),
+                pos: '+=' + diff,
                 easing: 'easeOutBack',
                 duration: 750,
-
-                begin() {
-                    displaySymbol.icon = icons[index];
-                },
-
-                complete() {
-                    displaySymbol.visible = false;
-
-                    app.on('SpinStart', () => displaySymbol.visible = true);
-                },
             })
                 .finished;
 
-        tasks.push(task);
+        stops.push(stop);
 
         await wait(250);
     }
 
-    return tasks;
+    await Promise.all(stops);
+
+    displaySymbols.forEach((symbol) => symbol.visible = false);
+
+    app.on('SpinStart', () => {
+        displaySymbols.forEach((symbol) => symbol.visible = true);
+    });
 }
 

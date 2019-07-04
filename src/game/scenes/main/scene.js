@@ -5,21 +5,11 @@ import {extras} from 'pixi.js';
 
 const {BitmapText} = extras;
 
-import {spin} from './logic';
+import {spin, result} from './logic';
 
-import {symbolConfig} from './data';
-
-export function create({normalTable}) {
-    const create = addPackage(app, 'main');
-    const scene = create('MainScene');
-
-    const slot = SlotMachine({
-        view: scene,
-        tables: normalTable,
-    });
-
+function Board(view) {
     const scores =
-        scene.children
+        view.children
             .filter(({name}) => name && name.includes('pos'))
             .map(({name, x, y}) => {
                 const style =
@@ -36,7 +26,21 @@ export function create({normalTable}) {
                 return score;
             });
 
-    scene.addChild(...scores);
+    view.addChild(...scores);
+}
+
+export function create({normalTable}) {
+    const create = addPackage(app, 'main');
+    const scene = create('MainScene');
+
+    const slot = SlotMachine({
+        view: scene,
+        tables: normalTable,
+    });
+
+    Board(
+        scene.getChildByName('board'),
+    );
 
     const effects =
         scene.children
@@ -51,23 +55,7 @@ export function create({normalTable}) {
     async function play(icons) {
         await spin(slot.reels, icons);
 
-        result(icons);
-    }
-
-    function result(icons) {
-        icons.forEach((icon, index) => {
-            const {name} = symbolConfig.find(({id}) => id === icon);
-
-            const tar = effects[index].getChildByName(name);
-
-            tar.visible = true;
-            tar.transition['anim'].restart();
-
-            app.on('SpinStart', () => {
-                tar.visible = false;
-                tar.transition['anim'].pause();
-            });
-        });
+        result(effects, icons);
     }
 }
 

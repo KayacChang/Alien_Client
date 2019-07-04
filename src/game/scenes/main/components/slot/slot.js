@@ -1,6 +1,11 @@
 import {isReel, isSymbol} from './util';
 
-import {divide, nth, mod, round, floor} from '../../../../../general';
+import {
+    divide,
+    nth,
+    mod,
+    round,
+} from '../../../../../general';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
 
@@ -91,6 +96,13 @@ function Symbol(view, index) {
             view.texture = Texture(id);
             icon = id;
         },
+
+        get visible() {
+            return view.visible;
+        },
+        set visible(flag) {
+            view.visible = flag;
+        },
     };
 }
 
@@ -103,15 +115,12 @@ function Reel({view, table}) {
 
     const offsetY = symbols[0].y;
 
-    let pos = 0;
-
-    const initIdx =
-        symbols
-            .reduce((a, b) => a.idx > b.idx ? a : b)
-            .idx;
-
     const displayLength =
         symbols.length * stopPerSymbol;
+
+    let nextId = symbols[0].initPos + 1;
+
+    let pos = 0;
 
     symbols.forEach((symbol) => {
         symbol.icon = nth(symbol.idx, table);
@@ -134,15 +143,18 @@ function Reel({view, table}) {
             return offsetY;
         },
 
-        get initIdx() {
-            return initIdx;
-        },
-
         get table() {
             return table;
         },
         set table(newTable) {
             table = newTable;
+        },
+
+        get nextId() {
+            return nextId;
+        },
+        set nextId(newId) {
+            nextId = mod(newId, table.length);
         },
 
         get pos() {
@@ -154,25 +166,24 @@ function Reel({view, table}) {
         },
     };
 
+    reel.pos = 6;
+
     return reel;
 }
 
 function update(reel) {
     reel.symbols
         .forEach((symbol) => {
-            const pos =
-                mod(reel.pos + symbol.initPos, reel.table.length);
-
             const displayPos =
-                mod(pos, reel.displayLength);
+                mod(reel.pos + symbol.initPos, reel.displayLength);
 
             const swap =
                 round(symbol.displayPos - displayPos) >= reel.displayLength;
 
             if (swap) {
-                const id = divide(floor(reel.pos), 2) + reel.initIdx;
+                symbol.icon = nth(reel.nextId, reel.table);
 
-                symbol.icon = nth(id, reel.table);
+                reel.nextId += 1;
             }
 
             symbol.displayPos = displayPos;
