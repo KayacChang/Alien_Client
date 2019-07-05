@@ -4,7 +4,7 @@ export function currencyFormat(num) {
     return numeral(num).format('$0,0');
 }
 
-export function currencyValue(num) {
+export function toValue(num) {
     return numeral(num).value();
 }
 

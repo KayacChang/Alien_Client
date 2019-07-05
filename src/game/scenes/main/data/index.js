@@ -1,8 +1,11 @@
 import {sprites} from './sprites';
 import {symbols, symbolConfig} from './symbols';
 
-import NUMBER_URL from '../assets/fonts/number.xml';
-import '../assets/fonts/number.png';
+import SCORE_URL from '../assets/fonts/score.xml';
+import '../assets/fonts/score.png';
+
+import BIGWIN_URL from '../assets/fonts/bigwin.xml';
+import '../assets/fonts/bigwin.png';
 
 
 export function reserve() {
@@ -10,7 +13,8 @@ export function reserve() {
         ...(sprites),
         ...(symbols),
 
-        {name: 'Score', url: NUMBER_URL},
+        {name: 'Score', url: SCORE_URL},
+        {name: 'BigWin', url: BIGWIN_URL},
     ];
 }
 

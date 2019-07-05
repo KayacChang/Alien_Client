@@ -12,6 +12,7 @@ import head from 'ramda/src/head';
 import reject from 'ramda/src/reject';
 import any from 'ramda/src/any';
 import keys from 'ramda/src/keys';
+import prop from 'ramda/src/prop';
 import pipe from 'ramda/src/pipe';
 
 export {
@@ -19,4 +20,6 @@ export {
     times, clone, pipe,
     all, equals, filter, keys,
     includes, __, head, reject, any,
+
+    prop,
 };

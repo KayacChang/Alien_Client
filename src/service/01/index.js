@@ -194,8 +194,17 @@ export function Service(prodKey) {
 
                 assign(reelTables, {
                     normalTable: data['reel']['normalreel'],
+                    reSpinTable: data['reel']['respinreel'],
                     freeGameTable: data['reel']['freereel'],
                 });
+
+                app.user.payTable = data['betrate']['winratearray'];
+
+                app.user.jackPot = {
+                    '5x': data['attach']['JackPartBonusPoolx5'],
+                    '3x': data['attach']['JackPartBonusPoolx3'],
+                    '2x': data['attach']['JackPartBonusPoolx2'],
+                };
 
                 return {...reelTables};
             });
@@ -302,18 +311,9 @@ export function Service(prodKey) {
 
         const normalGame = Result(data['normalresult']);
 
+        if (hasReSpin) debugger;
+
         const reSpinGame = hasReSpin && Result(data['respin']);
-
-        if (hasReSpin) {
-            const {positions, symbols} = clone(normalGame);
-
-            positions[1] = reSpinGame.positions[0];
-
-            symbols[1] = reSpinGame.symbols[0];
-
-            reSpinGame.positions = positions;
-            reSpinGame.symbols = symbols;
-        }
 
         const freeGame = hasFreeGame && data['freegame'].map(Result);
 

@@ -1,33 +1,8 @@
 import {addPackage} from 'pixi_fairygui';
-import {SlotMachine} from './components/slot';
-
-import {extras} from 'pixi.js';
-
-const {BitmapText} = extras;
 
 import {spin, result} from './logic';
 
-function Board(view) {
-    const scores =
-        view.children
-            .filter(({name}) => name && name.includes('pos'))
-            .map(({name, x, y}) => {
-                const style =
-                    (name.includes('jackpot')) ?
-                        {font: '30px Score'} : {font: '30px Score'};
-
-                const score =
-                    new BitmapText('$120,640,000', style);
-
-                score.position.set(x, y);
-
-                if (!name.includes('jackpot')) score.scale.set(0.9, 0.8);
-
-                return score;
-            });
-
-    view.addChild(...scores);
-}
+import {BigWin, Board, SlotMachine} from './components';
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -47,11 +22,12 @@ export function create({normalTable}) {
             .filter(({name}) => name && name.includes('effect'))
             .sort((a, b) => id(a) - id(b));
 
-    const bigWin = scene.getChildByName('bigWin');
+    BigWin(
+        scene.getChildByName('bigWin'),
+    );
 
     window.slot = slot;
     window.play = play;
-    window.bigWin = bigWin;
 
     return scene;
 
