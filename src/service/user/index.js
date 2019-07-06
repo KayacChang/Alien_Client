@@ -137,6 +137,7 @@ export function User() {
         },
         set jackPot(newTable) {
             jackPot = newTable;
+            app.emit('JackPotChange', jackPot);
         },
     });
 }
