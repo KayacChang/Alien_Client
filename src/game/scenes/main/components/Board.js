@@ -63,6 +63,7 @@ function JackPot(view) {
 
         const score =
             currentBet() * getOdds(name) + jackPot[name];
+
         view.text = currencyFormat(score);
     }
 }
@@ -78,7 +79,10 @@ function Normal(view) {
 
     function update() {
         const {name} = view;
-        const score = currentBet() * getOdds(name);
+
+        const score =
+            currentBet() * getOdds(name);
+
         view.text = currencyFormat(score);
     }
 }

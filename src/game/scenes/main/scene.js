@@ -14,7 +14,7 @@ export function create({normalTable}) {
     });
 
     Board(
-        scene.getChildByName('board'),
+        select('board'),
     );
 
     const effects =
@@ -23,7 +23,7 @@ export function create({normalTable}) {
             .sort((a, b) => id(a) - id(b));
 
     BigWin(
-        scene.getChildByName('bigWin'),
+        select('bigWin'),
     );
 
     window.slot = slot;
@@ -35,6 +35,10 @@ export function create({normalTable}) {
         await spin(slot.reels, icons);
 
         result(effects, icons);
+    }
+
+    function select(name) {
+        return scene.getChildByName(name);
     }
 }
 

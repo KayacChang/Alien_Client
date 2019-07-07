@@ -44,3 +44,9 @@ export {
     mod, floor, randomInt,
     random,
 };
+
+
+export function mRound(number, multiple) {
+    const n1 = round(divide(number, multiple));
+    return multiply(n1, multiple);
+}

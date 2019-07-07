@@ -8,9 +8,9 @@ import {
 } from '../../../../../general';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
+import {mRound} from '../../../../../general';
 
 export function SlotMachine({view, tables}) {
-
     const empty =
         symbolConfig
             .find(({name}) => name === 'empty')
@@ -127,6 +127,9 @@ function Reel({view, table}) {
 
     const displayLength =
         symbols.length * stopPerSymbol;
+
+    const nearest = mRound(table.length, displayLength);
+    table = table.slice(0, nearest);
 
     let nextId = symbols[0].initPos + 1;
 
