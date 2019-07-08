@@ -1,8 +1,8 @@
 import {addPackage} from 'pixi_fairygui';
 
-import {spin, result} from './logic';
-
 import {BigWin, Board, SlotMachine} from './components';
+
+import {logic} from './logic';
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -26,15 +26,21 @@ export function create({normalTable}) {
         select('bigWin'),
     );
 
-    window.slot = slot;
+    logic({
+        reels: slot.reels,
+        effects,
+    });
+
     window.play = play;
 
     return scene;
 
-    async function play(icons) {
-        await spin(slot.reels, icons);
+    function play() {
+        const key = process.env.KEY;
+        const bet = 1;
 
-        result(effects, icons);
+        app.service.sendOneRound({key, bet})
+            .then((result) => app.emit('GameResult', result));
     }
 
     function select(name) {

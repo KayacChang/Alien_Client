@@ -1,12 +1,18 @@
 import anime from 'animejs';
 import {wait} from '../../../../general';
+import {symbolConfig} from '../data';
+
+const empty =
+    symbolConfig
+        .find(({name}) => name === 'empty')
+        .id;
 
 export async function spin(reels, icons) {
     await start(reels);
 
     await wait(3000);
 
-    await stop(reels, icons);
+    return stop(reels, icons);
 }
 
 async function start(reels) {
@@ -47,9 +53,15 @@ async function stop(reels, icons) {
 
         displaySymbols.push(displaySymbol);
 
-        displaySymbol.icon = icons[index];
+        const icon = icons[index];
 
-        reel.pos -= displaySymbol.displayPos;
+        if (icon !== empty) {
+            displaySymbol.icon = icons[index];
+
+            reel.pos -= displaySymbol.displayPos;
+        } else {
+            reel.pos -= (displaySymbol.displayPos + 1);
+        }
 
         const stop =
             anime({
@@ -67,10 +79,6 @@ async function stop(reels, icons) {
 
     await Promise.all(stops);
 
-    displaySymbols.forEach((symbol) => symbol.visible = false);
-
-    app.on('SpinStart', () => {
-        displaySymbols.forEach((symbol) => symbol.visible = true);
-    });
+    return displaySymbols;
 }
 

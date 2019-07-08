@@ -7,7 +7,7 @@ export function isSymbol({name}) {
 }
 
 export function isResult({name}) {
-    return name.includes('result');
+    return name.includes('show.js');
 }
 
 export function TextureManager(symbolConfig) {

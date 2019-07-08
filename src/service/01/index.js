@@ -304,33 +304,19 @@ export function Service(prodKey) {
         const cash = data['playermoney'];
 
         const hasReSpin = Boolean(data['isrespin']);
-        const hasFreeGame = Boolean(data['isfreegame']);
-        const hasBetLock = Boolean(data['islockbet']);
-
-        const earnPoints = data['freecount'];
 
         const normalGame = Result(data['normalresult']);
 
-        if (hasReSpin) debugger;
-
         const reSpinGame = hasReSpin && Result(data['respin']);
-
-        const freeGame = hasFreeGame && data['freegame'].map(Result);
 
         return {
             cash,
             totalWin,
-            earnPoints,
 
             normalGame,
 
             hasReSpin,
             reSpinGame,
-
-            hasFreeGame,
-            freeGame,
-
-            hasBetLock,
         };
     }
 

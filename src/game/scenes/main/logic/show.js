@@ -1,6 +1,6 @@
 import {symbolConfig} from '../data';
 
-export function result(effects, icons) {
+export function show(effects, icons) {
     icons.forEach((icon, index) => {
         const effect = effects[index];
 
