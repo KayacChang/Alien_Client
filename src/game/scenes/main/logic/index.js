@@ -17,7 +17,12 @@ export function logic({slot, effects, reelTables}) {
             jackPot,
         } = result;
 
-        await display(normalGame);
+        const scores = await display(normalGame);
+
+        if (scores > 0) {
+            app.user.lastWin = normalGame.scores;
+            app.user.cash += normalGame.scores;
+        }
 
         if (hasReSpin) {
             slot.table = reelTables.reSpinTable;
@@ -38,7 +43,7 @@ export function logic({slot, effects, reelTables}) {
     async function display(result, reels = slot.reels) {
         table(result);
 
-        const {hasLink, symbols} = result;
+        const {hasLink, symbols, scores} = result;
 
         const displaySymbols = await spin(reels, symbols);
 
@@ -52,6 +57,10 @@ export function logic({slot, effects, reelTables}) {
             });
 
             show(effects, symbols);
+
+            return scores;
         }
+
+        return 0;
     }
 }

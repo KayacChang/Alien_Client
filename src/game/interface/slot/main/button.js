@@ -1,4 +1,3 @@
-import {setDropShadow} from '../../../plugin/filter';
 import anime from 'animejs';
 
 import {isMobile} from '../../../../general';
@@ -7,21 +6,12 @@ export function setBehaviour(it) {
     const hoverMaskView = it.getChildByName('hover');
     const downMaskView = it.getChildByName('down');
 
-    const shadow = setDropShadow(it, {
-        distance: 6,
-        alpha: 0.5,
-        rotation: 90,
-    });
-
     const anim = {
         duration: 350,
         easing: 'easeOutCubic',
     };
     const normal = {
-        shadow: {
-            distance: 6,
-            alpha: 0.5,
-        },
+
         hoverMask: {
             alpha: 0,
         },
@@ -30,10 +20,6 @@ export function setBehaviour(it) {
         },
     };
     const hover = {
-        shadow: {
-            distance: 6,
-            alpha: 0.3,
-        },
         hoverMask: {
             alpha: 0.1,
         },
@@ -58,12 +44,7 @@ export function setBehaviour(it) {
 
     function onNormal() {
         if (isMobile.phone) return;
-        anime({
-            targets: shadow,
-            easing: 'easeInOutSine',
-            duration: 100,
-            ...(normal.shadow),
-        });
+
         anime({
             targets: hoverMaskView,
             ...(anim),
@@ -79,12 +60,6 @@ export function setBehaviour(it) {
 
     function onHover() {
         if (isMobile.phone) return;
-        anime({
-            targets: shadow,
-            easing: 'easeInOutSine',
-            duration: 100,
-            ...(hover.shadow),
-        });
         anime({
             targets: hoverMaskView,
             ...(anim),
@@ -109,13 +84,6 @@ export function setBehaviour(it) {
             y: [0, 1.8],
             duration: 300,
             easing: 'easeOutQuad',
-        });
-        anime({
-            targets: shadow,
-            distance: 6,
-            alpha: 0.5,
-            duration: 100,
-            easing: 'easeInOutSine',
         });
     }
 }

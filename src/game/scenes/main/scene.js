@@ -4,37 +4,39 @@ import {Background, BigWin, SlotMachine} from './components';
 
 import {logic} from './logic';
 
-export function create({normalTable, reSpinTable}) {
+export function create(reelTables) {
     const create = addPackage(app, 'main');
     const scene = create('MainScene');
 
     const slot = SlotMachine({
         view: scene,
-        table: normalTable,
+        table: reelTables.normalTable,
     });
-
-    Background(
-        select('background'),
-    );
 
     const effects =
         scene.children
             .filter(({name}) => name && name.includes('effect'))
             .sort((a, b) => id(a) - id(b));
 
-    BigWin(
-        select('bigWin'),
-    );
-
-    logic({
-        reelTables: {normalTable, reSpinTable},
-        slot,
-        effects,
-    });
+    init();
 
     window.play = play;
 
     return scene;
+
+    function init() {
+        Background(
+            select('background'),
+        );
+
+        BigWin(
+            select('bigWin'),
+        );
+
+        logic({
+            reelTables, slot, effects,
+        });
+    }
 
     function play() {
         const key = process.env.KEY;

@@ -1,5 +1,4 @@
 import {Clickable, defaultFont} from '../../components';
-import {setDropShadow} from '../../../plugin/filter';
 import {setBehaviour} from './button';
 import anime from 'animejs';
 
@@ -34,11 +33,6 @@ export function Options(view) {
         x: btnFrame.scale.x,
         y: btnFrame.scale.y,
     };
-    setDropShadow(btnFrame, {
-        distance: 6,
-        alpha: 0.5,
-        rotation: 90,
-    });
 
     const menu = OptionMenu(
         view.getChildByName('optionMenu'),

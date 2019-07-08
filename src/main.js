@@ -7,6 +7,7 @@ import {Service} from './service/01';
 import {enableFullScreenMask} from './system/modules/screen';
 
 import ENV_URL from './env.json';
+import {Translate} from './system/modules/translate';
 
 const key = process.env.KEY;
 
@@ -30,6 +31,8 @@ async function main() {
 
         app.service = new Service(key);
 
+        global.translate = await Translate();
+
         // Import Load Scene
         const LoadScene = await import('./game/scenes/load/scene');
 
@@ -50,15 +53,18 @@ async function main() {
         await app.service.login({key});
 
         //  Import Main Scene
-        const [MainScene, initData] =
+        const [MainScene, UserInterface, initData] =
             await Promise.all([
                 import('./game/scenes/main'),
+                import('./game/interface/slot'),
                 app.service.init({key}),
             ]);
 
-        await app.resource.load(MainScene);
+        await app.resource.load(MainScene, UserInterface);
 
+        const ui = UserInterface.create(initData);
         const scene = MainScene.create(initData);
+        scene.addChild(ui);
 
         app.stage.addChildAt(scene, 0);
 

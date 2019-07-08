@@ -42,7 +42,7 @@ const backendOptions = {
     },
 };
 
-function init() {
+export function Translate() {
     return i18next
         .use(LanguageDetector)
         .use(Fetch)
@@ -60,5 +60,3 @@ function init() {
             defaultNS: 'cat',
         });
 }
-
-export default {init};
