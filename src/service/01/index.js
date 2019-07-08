@@ -194,8 +194,11 @@ export function Service(prodKey) {
 
                 assign(reelTables, {
                     normalTable: data['reel']['normalreel'],
-                    reSpinTable: data['reel']['respinreel'],
-                    freeGameTable: data['reel']['freereel'],
+                    reSpinTable: [
+                        data['reel']['normalreel'][0],
+                        data['reel']['respinreel'][0],
+                        data['reel']['normalreel'][2],
+                    ],
                 });
 
                 app.user.payTable = data['betrate']['winratearray'];
@@ -305,9 +308,17 @@ export function Service(prodKey) {
 
         const hasReSpin = Boolean(data['isrespin']);
 
+        if (hasReSpin) debugger;
+
         const normalGame = Result(data['normalresult']);
 
-        const reSpinGame = hasReSpin && Result(data['respin']);
+        const reSpinGame = hasReSpin && data['respin'].map(Result);
+
+        const jackPot = {
+            '5x': data['attach']['JackPartBonusPoolx5'],
+            '3x': data['attach']['JackPartBonusPoolx3'],
+            '2x': data['attach']['JackPartBonusPoolx2'],
+        };
 
         return {
             cash,
@@ -317,6 +328,8 @@ export function Service(prodKey) {
 
             hasReSpin,
             reSpinGame,
+
+            jackPot,
         };
     }
 

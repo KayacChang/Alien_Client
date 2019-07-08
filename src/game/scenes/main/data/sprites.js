@@ -7,6 +7,7 @@ import MAIN_ATLAS04_URL from '../assets/sprite_sheets/main@atlas0_4.png';
 import MAIN_ATLAS05_URL from '../assets/sprite_sheets/main@atlas0_5.png';
 import MAIN_ATLAS06_URL from '../assets/sprite_sheets/main@atlas0_6.png';
 import MAIN_ATLAS07_URL from '../assets/sprite_sheets/main@atlas0_7.png';
+import MAIN_ATLAS08_URL from '../assets/sprite_sheets/main@atlas0_8.png';
 
 export const sprites = [
     {name: 'main.fui', url: MAIN_URL, xhrType: 'arraybuffer'},
@@ -18,4 +19,5 @@ export const sprites = [
     {name: 'main@atlas0_5.png', url: MAIN_ATLAS05_URL},
     {name: 'main@atlas0_6.png', url: MAIN_ATLAS06_URL},
     {name: 'main@atlas0_7.png', url: MAIN_ATLAS07_URL},
+    {name: 'main@atlas0_8.png', url: MAIN_ATLAS08_URL},
 ];

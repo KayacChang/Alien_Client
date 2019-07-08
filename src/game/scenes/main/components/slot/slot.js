@@ -10,29 +10,42 @@ import {
 import {stopPerSymbol, symbolConfig} from '../../data';
 import {mRound} from '../../../../../general';
 
-export function SlotMachine({view, tables}) {
+export function SlotMachine({view, table}) {
     const empty =
         symbolConfig
             .find(({name}) => name === 'empty')
             .id;
 
-    tables =
-        tables.map((reelTable) =>
-            reelTable.filter((icon) => icon !== empty));
+    table = process(table);
 
     const reels =
         view.children
             .filter(isReel)
             .map((view, index) => Reel({
                 view,
-                table: tables[index],
+                table: table[index],
             }));
 
     return {
         get reels() {
             return reels;
         },
+
+        get table() {
+            return table;
+        },
+        set table(newTable) {
+            table = process(newTable);
+
+            reels.forEach(
+                (reel, index) => reel.table = table[index]);
+        },
     };
+
+    function process(table) {
+        return table.map((reel) =>
+            reel.filter((icon) => icon !== empty));
+    }
 }
 
 function Texture(icon) {
@@ -128,16 +141,9 @@ function Reel({view, table}) {
     const displayLength =
         symbols.length * stopPerSymbol;
 
-    const nearest = mRound(table.length, displayLength);
-    table = table.slice(0, nearest);
-
     let nextId = symbols[0].initPos + 1;
 
     let pos = 0;
-
-    symbols.forEach((symbol) => {
-        symbol.icon = nth(symbol.idx, table);
-    });
 
     const reel = {
         get name() {
@@ -160,7 +166,8 @@ function Reel({view, table}) {
             return table;
         },
         set table(newTable) {
-            table = newTable;
+            const nearest = mRound(newTable.length, displayLength);
+            table = newTable.slice(0, nearest);
         },
 
         get nextId() {
@@ -180,6 +187,11 @@ function Reel({view, table}) {
     };
 
     reel.pos = 6;
+    reel.table = table;
+
+    symbols.forEach((symbol) => {
+        symbol.icon = nth(symbol.idx, table);
+    });
 
     return reel;
 }

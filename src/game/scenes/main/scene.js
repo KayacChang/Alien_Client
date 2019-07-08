@@ -1,20 +1,20 @@
 import {addPackage} from 'pixi_fairygui';
 
-import {BigWin, Board, SlotMachine} from './components';
+import {Background, BigWin, SlotMachine} from './components';
 
 import {logic} from './logic';
 
-export function create({normalTable}) {
+export function create({normalTable, reSpinTable}) {
     const create = addPackage(app, 'main');
     const scene = create('MainScene');
 
     const slot = SlotMachine({
         view: scene,
-        tables: normalTable,
+        table: normalTable,
     });
 
-    Board(
-        select('board'),
+    Background(
+        select('background'),
     );
 
     const effects =
@@ -27,7 +27,8 @@ export function create({normalTable}) {
     );
 
     logic({
-        reels: slot.reels,
+        reelTables: {normalTable, reSpinTable},
+        slot,
         effects,
     });
 

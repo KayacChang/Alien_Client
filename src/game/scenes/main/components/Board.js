@@ -50,11 +50,10 @@ function getOdds(name) {
 }
 
 function JackPot(view) {
-    const {jackPot} = app.user;
-
     update();
 
     app.on('UserBetChange', update);
+    app.on('JackPotChange', update);
 
     return view;
 
@@ -62,7 +61,7 @@ function JackPot(view) {
         const {name} = view;
 
         const score =
-            currentBet() * getOdds(name) + jackPot[name];
+            currentBet() * getOdds(name) + app.user.jackPot[name];
 
         view.text = currencyFormat(score);
     }
