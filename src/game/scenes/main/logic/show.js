@@ -12,18 +12,19 @@ export function show(effects, icons) {
             [name, anim] = name.split('@');
         }
 
+        const tar = effect.getChildByName(name);
+
         if (name === 'alien') {
-            anim = 'left';
+            anim = 'right';
         }
 
-        const tar = effect.getChildByName(name);
-        const animation = tar.transition[anim];
-
-        if (name === 'wild') {
+        if (name.includes('wild')) {
             tar.getChildByName('combo')
                 .children
-                .forEach((el) => el.visible = false);
+                .forEach((view) => view.visible = false);
         }
+
+        const animation = tar.transition[anim];
 
         tar.visible = true;
         animation.restart();
@@ -32,22 +33,5 @@ export function show(effects, icons) {
             tar.visible = false;
             animation.pause();
         });
-
-        if (name === 'alien') {
-            const alien = effect.getChildByName(anim);
-
-            const alienAnim = alien.transition['anim'];
-
-            animation.finished
-                .then(() => {
-                    alien.visible = true;
-                    alienAnim.restart();
-                });
-
-            app.on('SpinStart', () => {
-                alien.visible = false;
-                alienAnim.pause();
-            });
-        }
     });
 }

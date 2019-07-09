@@ -20,8 +20,6 @@ export function create(reelTables) {
 
     init();
 
-    window.play = play;
-
     return scene;
 
     function init() {
@@ -36,14 +34,6 @@ export function create(reelTables) {
         logic({
             reelTables, slot, effects,
         });
-    }
-
-    function play() {
-        const key = process.env.KEY;
-        const bet = 1;
-
-        app.service.sendOneRound({key, bet})
-            .then((result) => app.emit('GameResult', result));
     }
 
     function select(name) {

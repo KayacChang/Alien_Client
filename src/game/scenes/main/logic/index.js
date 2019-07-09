@@ -4,7 +4,11 @@ import {spin} from './spin';
 import {show} from './show';
 
 export function logic({slot, effects, reelTables}) {
-    app.on('GameResult', async (result) => {
+    app.on('GameResult', onGameResult);
+
+    window.test = test;
+
+    async function onGameResult(result) {
         log('Result =============');
         table(result);
 
@@ -38,7 +42,7 @@ export function logic({slot, effects, reelTables}) {
 
         log('Round Complete...');
         app.emit('Idle');
-    });
+    }
 
     async function display(result, reels = slot.reels) {
         table(result);
@@ -62,5 +66,19 @@ export function logic({slot, effects, reelTables}) {
         }
 
         return 0;
+    }
+
+    async function test(symbols, reels = slot.reels) {
+        const displaySymbols = await spin(reels, symbols);
+
+        displaySymbols
+            .forEach((symbol) => symbol.visible = false);
+
+        app.on('SpinStart', () => {
+            displaySymbols
+                .forEach((symbol) => symbol.visible = true);
+        });
+
+        show(effects, symbols);
     }
 }

@@ -70,7 +70,7 @@ async function main() {
 
         app.stage.removeChild(loadScene);
 
-        select('script').forEach(remove);
+        // select('script').forEach(remove);
 
         app.resize();
 
