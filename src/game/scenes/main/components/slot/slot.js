@@ -43,8 +43,15 @@ export function SlotMachine({view, table}) {
     };
 
     function process(table) {
-        return table.map((reel) =>
-            reel.filter((icon) => icon !== empty));
+        return table.map((reel, index) =>
+            reel
+                .map((icon) => {
+                    if (icon === 0 && index !== 1) return `${icon}${index}`;
+
+                    return icon + '';
+                })
+                .filter((icon) => icon !== empty),
+        );
     }
 }
 

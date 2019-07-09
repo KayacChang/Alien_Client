@@ -1,24 +1,32 @@
 {"frames": {
 
-"Alien.png":
+"Alien_L.png":
 {
-	"frame": {"x":385,"y":501,"w":418,"h":467},
-	"rotated": true,
+	"frame": {"x":1,"y":1,"w":418,"h":467},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":41,"y":16,"w":418,"h":467},
+	"sourceSize": {"w":500,"h":503}
+},
+"Alien_R.png":
+{
+	"frame": {"x":1,"y":470,"w":418,"h":467},
+	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":41,"y":16,"w":418,"h":467},
 	"sourceSize": {"w":500,"h":503}
 },
 "Bar1.png":
 {
-	"frame": {"x":1187,"y":335,"w":326,"h":174},
-	"rotated": true,
+	"frame": {"x":1161,"y":728,"w":326,"h":174},
+	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":80,"y":168,"w":326,"h":174},
 	"sourceSize": {"w":500,"h":500}
 },
 "Bar2.png":
 {
-	"frame": {"x":1069,"y":1,"w":332,"h":296},
+	"frame": {"x":1161,"y":394,"w":332,"h":296},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":75,"y":112,"w":332,"h":296},
@@ -26,7 +34,7 @@
 },
 "Bar3.png":
 {
-	"frame": {"x":854,"y":501,"w":331,"h":391},
+	"frame": {"x":1133,"y":1,"w":331,"h":391},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":76,"y":54,"w":331,"h":391},
@@ -34,7 +42,7 @@
 },
 "Seven.png":
 {
-	"frame": {"x":1,"y":501,"w":382,"h":442},
+	"frame": {"x":777,"y":501,"w":382,"h":442},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":57,"y":25,"w":382,"h":442},
@@ -42,7 +50,7 @@
 },
 "Wildx2.png":
 {
-	"frame": {"x":1,"y":1,"w":498,"h":354},
+	"frame": {"x":421,"y":1,"w":498,"h":354},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":70,"w":498,"h":354},
@@ -50,7 +58,7 @@
 },
 "Wildx3.png":
 {
-	"frame": {"x":357,"y":1,"w":498,"h":354},
+	"frame": {"x":421,"y":501,"w":498,"h":354},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":70,"w":498,"h":354},
@@ -58,7 +66,7 @@
 },
 "Wildx5.png":
 {
-	"frame": {"x":713,"y":1,"w":498,"h":354},
+	"frame": {"x":777,"y":1,"w":498,"h":354},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":70,"w":498,"h":354},
@@ -73,8 +81,8 @@
 	"version": "1.0",
 	"image": "symbols.png",
 	"format": "RGBA8888",
-	"size": {"w":1366,"h":944},
+	"size": {"w":1488,"h":1000},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2fb994334f22122fd19af561b3e39006:3b4eefaeffd4cbd1f0181807fc729ad5:d295ed7153fe372207e34d26d380974a$"
+	"smartupdate": "$TexturePacker:SmartUpdate:09e2602a2b18cf412907eb7771b1271e:caf631273d447933b4e00743e48bd2f3:d295ed7153fe372207e34d26d380974a$"
 }
 }

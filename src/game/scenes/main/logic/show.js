@@ -12,11 +12,12 @@ export function show(effects, icons) {
             [name, anim] = name.split('@');
         }
 
-        const tar = effect.getChildByName(name);
-
-        if (name === 'alien') {
+        if (name.includes('alien')) {
+            name = 'alien';
             anim = 'right';
         }
+
+        const tar = effect.getChildByName(name);
 
         if (name.includes('wild')) {
             tar.getChildByName('combo')
