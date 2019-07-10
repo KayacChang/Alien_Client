@@ -308,8 +308,6 @@ export function Service(prodKey) {
 
         const hasReSpin = Boolean(data['isrespin']);
 
-        if (hasReSpin) debugger;
-
         const normalGame = Result(data['normalresult']);
 
         const reSpinGame = hasReSpin && data['respin'].map(Result);

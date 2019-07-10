@@ -69,7 +69,7 @@ export function logic({slot, effects, reelTables}) {
             displaySymbols
                 .forEach((symbol) => symbol.visible = false);
 
-            app.on('SpinStart', () => {
+            app.once('SpinStart', () => {
                 displaySymbols
                     .forEach((symbol) => symbol.visible = true);
             });
@@ -85,18 +85,19 @@ export function logic({slot, effects, reelTables}) {
     async function test(symbols, reels = slot.reels) {
         const result = process({symbols});
 
-        console.log(result);
-
         const displaySymbols = await spin(reels, result.symbols);
 
         displaySymbols
             .forEach((symbol) => symbol.visible = false);
 
-        app.on('SpinStart', () => {
+        app.once('SpinStart', () => {
             displaySymbols
                 .forEach((symbol) => symbol.visible = true);
         });
 
         show(effects, result.symbols);
+
+        log('Round Complete...');
+        app.emit('Idle');
     }
 }

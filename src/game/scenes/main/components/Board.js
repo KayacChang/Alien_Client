@@ -3,6 +3,7 @@ import {extras} from 'pixi.js';
 const {BitmapText} = extras;
 
 import {currencyFormat} from '../../../../general';
+import {currencyChange} from '../effect';
 
 const style = {font: '30px Score'};
 
@@ -50,39 +51,61 @@ function getOdds(name) {
 }
 
 function JackPot(view) {
-    update();
+    const {name} = view;
+
+    let score = getScore();
+
+    view.text = currencyFormat(score);
 
     app.on('UserBetChange', update);
     app.on('JackPotChange', update);
 
     return view;
 
+    function getScore() {
+        return currentBet() * getOdds(name) + app.user.jackPot[name];
+    }
+
     function update() {
-        const {name} = view;
+        const newScore = getScore();
 
-        const score =
-            currentBet() * getOdds(name) + app.user.jackPot[name];
+        currencyChange({
+            range: [score, newScore],
+            targets: view,
+            duration: 500,
+        });
 
-        view.text = currencyFormat(score);
+        score = newScore;
     }
 }
 
 function Normal(view) {
-    view.scale.set(0.9, 0.8);
+    const {name} = view;
 
-    update();
+    let score = getScore();
+
+    view.text = currencyFormat(score);
+
+    view.scale.set(0.9, 0.8);
 
     app.on('UserBetChange', update);
 
     return view;
 
+    function getScore() {
+        return currentBet() * getOdds(name);
+    }
+
     function update() {
-        const {name} = view;
+        const newScore = getScore();
 
-        const score =
-            currentBet() * getOdds(name);
+        currencyChange({
+            range: [score, newScore],
+            targets: view,
+            duration: 500,
+        });
 
-        view.text = currencyFormat(score);
+        score = newScore;
     }
 }
 

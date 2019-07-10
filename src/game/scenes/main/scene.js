@@ -1,6 +1,6 @@
 import {addPackage} from 'pixi_fairygui';
 
-import {Background, BigWin, SlotMachine} from './components';
+import {Background, BigWin, SlotMachine, Waters} from './components';
 
 import {logic} from './logic';
 
@@ -26,6 +26,8 @@ export function create(reelTables) {
         Background(
             select('background'),
         );
+
+        Waters(scene);
 
         BigWin(
             select('bigWin'),

@@ -1,20 +1,23 @@
 import {symbolConfig} from '../data';
 
+function getSymbolNameBy(icon) {
+    return symbolConfig
+        .find(({id}) => id === icon)
+        .name;
+}
+
 export function show(effects, icons) {
     icons.forEach((icon, index) => {
         const effect = effects[index];
 
-        let {name} = symbolConfig.find(({id}) => id === icon);
+        let name = getSymbolNameBy(icon);
+
+        if (name === 'empty') return;
 
         let anim = 'anim';
 
         if (name.includes('wild')) {
             [name, anim] = name.split('@');
-        }
-
-        if (name.includes('alien')) {
-            name = 'alien';
-            anim = 'right';
         }
 
         const tar = effect.getChildByName(name);

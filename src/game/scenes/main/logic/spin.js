@@ -38,6 +38,8 @@ async function start(reels) {
 }
 
 async function stop(reels, icons) {
+    app.emit('SpinStop');
+
     const stops = [];
 
     const displaySymbols = [];
@@ -69,6 +71,10 @@ async function stop(reels, icons) {
                 pos: '+=' + 2,
                 easing: 'easeOutBack',
                 duration: 750,
+
+                begin() {
+                    app.emit('ReelStop', reel);
+                },
             })
                 .finished;
 

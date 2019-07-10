@@ -1,7 +1,7 @@
 import {Board} from './Board';
 
 export function Background(view) {
-    const board = Board(
+    Board(
         select('board'),
     );
 
@@ -9,21 +9,23 @@ export function Background(view) {
 
     const ShowBigWin = view.transition['ShowBigWin'];
     const HideBigWin = view.transition['HideBigWin'];
+    const ShowJackPot = view.transition['ShowJackPot'];
+    const HideJackPot = view.transition['HideJackPot'];
 
     init();
 
     return {
         showBigWin,
         hideBigWin,
+        showJackPot,
+        hideJackPot,
     };
 
     function init() {
         ShowBigWin.pause();
-        HideBigWin.pause();
+        ShowJackPot.pause();
 
         boardEffect.visible = false;
-
-        board.alpha = 1;
     }
 
     function select(name) {
@@ -40,6 +42,19 @@ export function Background(view) {
         HideBigWin.restart();
 
         HideBigWin.finished
+            .then(() => boardEffect.visible = false);
+    }
+
+    function showJackPot() {
+        boardEffect.visible = true;
+
+        ShowJackPot.restart();
+    }
+
+    function hideJackPot() {
+        HideJackPot.restart();
+
+        HideJackPot.finished
             .then(() => boardEffect.visible = false);
     }
 }

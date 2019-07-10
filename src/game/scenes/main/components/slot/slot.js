@@ -137,6 +137,9 @@ function Symbol(view, index) {
 }
 
 function Reel({view, table}) {
+    const name = view.name;
+    const index = Number(view.name.split('@')[1]);
+
     const symbols =
         view.children
             .filter(isSymbol)
@@ -153,8 +156,12 @@ function Reel({view, table}) {
     let pos = 0;
 
     const reel = {
+        get index() {
+            return index;
+        },
+
         get name() {
-            return view.name;
+            return name;
         },
 
         get symbols() {
