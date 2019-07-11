@@ -7,12 +7,12 @@ const empty =
         .find(({name}) => name === 'empty')
         .id;
 
-export async function spin(reels, icons) {
+export async function spin(reels, icons, func) {
     await start(reels);
 
     await wait(3000);
 
-    return stop(reels, icons);
+    return stop(reels, icons, func);
 }
 
 async function start(reels) {
@@ -37,7 +37,7 @@ async function start(reels) {
     }
 }
 
-async function stop(reels, icons) {
+async function stop(reels, icons, func) {
     app.emit('SpinStop');
 
     const stops = [];
@@ -45,7 +45,7 @@ async function stop(reels, icons) {
     const displaySymbols = [];
 
     for (const reel of reels) {
-        const index = reels.indexOf(reel);
+        const index = reel.index;
 
         anime.remove(reel);
 
@@ -65,7 +65,7 @@ async function stop(reels, icons) {
             reel.pos -= (displaySymbol.displayPos + 1);
         }
 
-        const stop =
+        const stop = (func) ? func(reel) :
             anime({
                 targets: reel,
                 pos: '+=' + 2,
@@ -84,6 +84,8 @@ async function stop(reels, icons) {
     }
 
     await Promise.all(stops);
+
+    app.emit('SpinStopComplete');
 
     return displaySymbols;
 }

@@ -23,7 +23,7 @@ export function create(reelTables) {
     return scene;
 
     function init() {
-        window.background = Background(
+        const background = Background(
             select('background'),
         );
 
@@ -35,6 +35,8 @@ export function create(reelTables) {
 
         logic({
             reelTables, slot, effects,
+
+            background,
         });
     }
 

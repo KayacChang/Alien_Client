@@ -1,5 +1,6 @@
 import {Board} from './Board';
 import {wait} from '../../../../general';
+import {randomInt} from '../../../../general';
 
 export function Background(view) {
     Board(
@@ -16,6 +17,17 @@ export function Background(view) {
     const ShowAlien = view.transition['ShowAlien'];
     const HideAlien = view.transition['HideAlien'];
 
+    const greenAlien = view.getChildByName('alien@green');
+    const redAlien = view.getChildByName('alien@red');
+
+    const electron = view.getChildByName('effect@electron');
+
+    greenAlien.magnet = greenAlien.getChildByName('magnet');
+    redAlien.magnet = redAlien.getChildByName('magnet');
+
+    let shaking = false;
+    let charging = false;
+
     init();
 
     return {
@@ -24,8 +36,23 @@ export function Background(view) {
         showJackPot,
         hideJackPot,
 
+        greenAlien,
+        redAlien,
+
         showAlien,
         hideAlien,
+
+        showMagnet,
+        hideMagnet,
+
+        startAttraction,
+        stopAttraction,
+
+        startShaking,
+        stopShaking,
+
+        startCharging,
+        stopCharging,
     };
 
     function init() {
@@ -88,4 +115,96 @@ export function Background(view) {
 
         return HideAlien.finished;
     }
+
+    function showMagnet() {
+        const showGreenMagnet = greenAlien.transition['ShowMagnet'];
+        const showRedMagnet = redAlien.transition['ShowMagnet'];
+
+        showGreenMagnet.restart();
+        showRedMagnet.restart();
+
+        return Promise.all([
+            showGreenMagnet.finished,
+            showRedMagnet.finished,
+        ]);
+    }
+
+    function hideMagnet() {
+        const hideGreenMagnet = greenAlien.transition['HideMagnet'];
+        const hideRedMagnet = redAlien.transition['HideMagnet'];
+
+        hideGreenMagnet.restart();
+        hideRedMagnet.restart();
+
+        return Promise.all([
+            hideGreenMagnet.finished,
+            hideRedMagnet.finished,
+        ]);
+    }
+
+    function startAttraction(amplitude = 3) {
+        if (shaking || charging) stopAttraction();
+
+        startShaking(amplitude);
+        startCharging(amplitude);
+    }
+
+    function stopAttraction() {
+        stopShaking();
+        stopCharging();
+    }
+
+    function startShaking(amplitude = 3) {
+        shaking = true;
+
+        shake(greenAlien);
+        shake(redAlien);
+
+        function shake(target, pos) {
+            const range = [-1 * amplitude, amplitude];
+
+            const {x, y} = pos || target.position;
+            target.position.x = x + randomInt(...range);
+            target.position.y = y + randomInt(...range);
+
+            requestAnimationFrame(() =>
+                (shaking) ?
+                    shake(target, {x, y}) :
+                    target.position.set(x, y),
+            );
+        }
+    }
+
+    function stopShaking() {
+        shaking = false;
+    }
+
+    function startCharging(amplitude = 3) {
+        electron.visible = true;
+
+        charging = true;
+
+        shake(electron);
+
+        function shake(target, pos) {
+            const range = [-1 * amplitude, amplitude];
+
+            const {x, y} = pos || target.position;
+            target.position.x = x + randomInt(...range);
+            target.position.y = y + randomInt(...range);
+
+            requestAnimationFrame(() =>
+                (charging) ?
+                    shake(target, {x, y}) :
+                    target.position.set(x, y),
+            );
+        }
+    }
+
+    function stopCharging() {
+        charging = false;
+        electron.visible = false;
+    }
 }
+
+

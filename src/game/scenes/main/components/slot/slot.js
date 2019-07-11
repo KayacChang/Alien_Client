@@ -105,6 +105,13 @@ function Symbol(view, index) {
             displayPos = newPos;
         },
 
+        get x() {
+            return view.x;
+        },
+        set x(newX) {
+            view.x = newX;
+        },
+
         get y() {
             return view.y;
         },
@@ -182,6 +189,8 @@ function Reel({view, table}) {
         set table(newTable) {
             const nearest = mRound(newTable.length, displayLength);
             table = newTable.slice(0, nearest);
+
+            nextId = mod(nextId, table.length);
         },
 
         get nextId() {
@@ -205,6 +214,8 @@ function Reel({view, table}) {
 
     symbols.forEach((symbol) => {
         symbol.icon = nth(symbol.idx, table);
+
+        app.on('SpinStart', () => symbol.visible = true);
     });
 
     return reel;

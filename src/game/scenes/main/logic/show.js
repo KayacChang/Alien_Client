@@ -54,7 +54,7 @@ function alien(effect, name) {
 
     const alien = target.getChildByName('alien');
 
-    const expression = alien.transition[randomInt(5)];
+    const expression = alien.transition[randomInt(4)];
 
     expression.loop = true;
     animation.loop = true;
