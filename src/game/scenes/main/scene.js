@@ -23,7 +23,7 @@ export function create(reelTables) {
     return scene;
 
     function init() {
-        Background(
+        window.background = Background(
             select('background'),
         );
 

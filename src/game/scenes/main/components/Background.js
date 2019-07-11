@@ -1,4 +1,5 @@
 import {Board} from './Board';
+import {wait} from '../../../../general';
 
 export function Background(view) {
     Board(
@@ -12,6 +13,9 @@ export function Background(view) {
     const ShowJackPot = view.transition['ShowJackPot'];
     const HideJackPot = view.transition['HideJackPot'];
 
+    const ShowAlien = view.transition['ShowAlien'];
+    const HideAlien = view.transition['HideAlien'];
+
     init();
 
     return {
@@ -19,13 +23,28 @@ export function Background(view) {
         hideBigWin,
         showJackPot,
         hideJackPot,
+
+        showAlien,
+        hideAlien,
     };
 
     function init() {
         ShowBigWin.pause();
         ShowJackPot.pause();
+        ShowAlien.pause();
+        HideAlien.pause();
 
         boardEffect.visible = false;
+
+        app.once('Idle', () => requestAnimationFrame(onIdle));
+
+        async function onIdle() {
+            await showAlien();
+
+            await wait(500);
+
+            return hideAlien();
+        }
     }
 
     function select(name) {
@@ -56,5 +75,17 @@ export function Background(view) {
 
         HideJackPot.finished
             .then(() => boardEffect.visible = false);
+    }
+
+    function showAlien() {
+        ShowAlien.restart();
+
+        return ShowAlien.finished;
+    }
+
+    function hideAlien() {
+        HideAlien.restart();
+
+        return HideAlien.finished;
     }
 }
