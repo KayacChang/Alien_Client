@@ -27,6 +27,8 @@ export function create(reelTables) {
             select('background'),
         );
 
+        window.background = background;
+
         Waters(scene);
 
         BigWin(

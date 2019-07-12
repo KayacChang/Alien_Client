@@ -2,6 +2,7 @@ import anime from 'animejs';
 
 const config = {
     duration: 1000,
+    easing: 'easeOutQuart',
 };
 
 export function fadeIn({targets, ...options}) {

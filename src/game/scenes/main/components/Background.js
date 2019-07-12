@@ -1,18 +1,22 @@
-import {Board} from './Board';
+import {Normal, ReSpin} from './Board';
 import {wait} from '../../../../general';
 import {randomInt} from '../../../../general';
 
 export function Background(view) {
-    Board(
-        select('board'),
-    );
+    const normalBoard =
+        Normal(
+            select('board@normal'),
+        );
+
+    const reSpinBoard =
+        ReSpin(
+            select('board@respin'),
+        );
 
     const boardEffect = select('board@effect');
 
-    const ShowBigWin = view.transition['ShowBigWin'];
-    const HideBigWin = view.transition['HideBigWin'];
-    const ShowJackPot = view.transition['ShowJackPot'];
-    const HideJackPot = view.transition['HideJackPot'];
+    const [bigWin, jackPot, reSpin] =
+        ['BigWin', 'JackPot', 'ReSpin'].map(TextEffect);
 
     const ShowAlien = view.transition['ShowAlien'];
     const HideAlien = view.transition['HideAlien'];
@@ -31,10 +35,12 @@ export function Background(view) {
     init();
 
     return {
-        showBigWin,
-        hideBigWin,
-        showJackPot,
-        hideJackPot,
+        bigWin,
+        jackPot,
+        reSpin,
+
+        normalBoard,
+        reSpinBoard,
 
         greenAlien,
         redAlien,
@@ -47,21 +53,12 @@ export function Background(view) {
 
         startAttraction,
         stopAttraction,
-
-        startShaking,
-        stopShaking,
-
-        startCharging,
-        stopCharging,
     };
 
     function init() {
-        ShowBigWin.pause();
-        ShowJackPot.pause();
-        ShowAlien.pause();
-        HideAlien.pause();
-
         boardEffect.visible = false;
+        normalBoard.alpha = 0;
+        reSpinBoard.alpha = 0;
 
         app.once('Idle', () => requestAnimationFrame(onIdle));
 
@@ -70,38 +67,42 @@ export function Background(view) {
 
             await wait(500);
 
-            return hideAlien();
+            normalBoard.show();
+
+            await hideAlien();
+        }
+    }
+
+    function TextEffect(name) {
+        const Show = view.transition['Show' + name];
+        const Hide = view.transition['Hide' + name];
+
+        Show.pause();
+        Hide.pause();
+
+        return {show, hide};
+
+        async function show() {
+            if (normalBoard.alpha !== 0) await normalBoard.hide();
+
+            Show.restart();
+
+            boardEffect.visible = true;
+
+            return Show.finished;
+        }
+
+        function hide() {
+            Hide.restart();
+
+            return Hide
+                .finished
+                .then(() => boardEffect.visible = false);
         }
     }
 
     function select(name) {
         return view.getChildByName(name);
-    }
-
-    function showBigWin() {
-        boardEffect.visible = true;
-
-        ShowBigWin.restart();
-    }
-
-    function hideBigWin() {
-        HideBigWin.restart();
-
-        HideBigWin.finished
-            .then(() => boardEffect.visible = false);
-    }
-
-    function showJackPot() {
-        boardEffect.visible = true;
-
-        ShowJackPot.restart();
-    }
-
-    function hideJackPot() {
-        HideJackPot.restart();
-
-        HideJackPot.finished
-            .then(() => boardEffect.visible = false);
     }
 
     function showAlien() {

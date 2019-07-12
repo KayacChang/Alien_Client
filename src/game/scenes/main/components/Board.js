@@ -2,12 +2,13 @@ import {extras} from 'pixi.js';
 
 const {BitmapText} = extras;
 
-import {currencyFormat} from '../../../../general';
-import {currencyChange} from '../effect';
+import {currencyFormat, wait} from '../../../../general';
+import {currencyChange, fadeIn, fadeOut} from '../effect';
+import anime from 'animejs';
 
 const style = {font: '30px Score'};
 
-export function Board(view) {
+export function Normal(view) {
     const scores =
         view.children
             .filter(({name}) => name && name.includes('pos'))
@@ -24,7 +25,7 @@ export function Board(view) {
                 } else {
                     score.name = name.split('@')[1];
 
-                    Normal(score);
+                    PayLine(score);
                 }
 
                 return score;
@@ -32,7 +33,76 @@ export function Board(view) {
 
     view.addChild(...scores);
 
+    view.show = show;
+    view.hide = hide;
+
     return view;
+
+    function show() {
+        return fadeIn({targets: view}).finished;
+    }
+
+    function hide() {
+        return fadeOut({targets: view}).finished;
+    }
+}
+
+export function ReSpin(view) {
+    const scores =
+        view.children
+            .filter(({name}) => name.includes('pos'))
+            .map(({name, x, y}) => {
+                const score =
+                    new BitmapText('0', style);
+
+                score.anchor.set(0.5, 1);
+                score.position.set(x, y);
+
+                score.name = name.split('_')[1];
+
+                if (['2x', '3x'].includes(score.name)) {
+                    score.scale.set(0.9, 0.8);
+                }
+
+                JackPot(score);
+
+                return score;
+            });
+
+    const planets =
+        view.children
+            .filter(({name}) => name.includes('planet'));
+
+    view.addChild(...scores);
+
+    view.show = show;
+    view.hide = hide;
+
+    return view;
+
+    async function show() {
+        view.alpha = 1;
+
+        planets.forEach((it) => it.alpha = 0);
+        scores.forEach((it) => it.alpha = 0);
+
+        const showAnim = view.transition['show'];
+
+        showAnim.restart();
+
+        await wait(1000);
+
+        fadeIn({
+            targets: scores,
+            delay: anime.stagger(250),
+        });
+
+        return showAnim.finished;
+    }
+
+    function hide() {
+        return fadeOut({targets: view}).finished;
+    }
 }
 
 function getOdds(name) {
@@ -79,7 +149,7 @@ function JackPot(view) {
     }
 }
 
-function Normal(view) {
+function PayLine(view) {
     const {name} = view;
 
     let score = getScore();

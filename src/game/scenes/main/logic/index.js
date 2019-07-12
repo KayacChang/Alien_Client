@@ -9,6 +9,11 @@ export function logic({slot, effects, reelTables, background}) {
     app.on('GameResult', onGameResult);
 
     const {
+        reSpin,
+
+        normalBoard,
+        reSpinBoard,
+
         greenAlien,
         redAlien,
 
@@ -46,11 +51,15 @@ export function logic({slot, effects, reelTables, background}) {
 
         if (hasReSpin) {
             // TODO: Show ReSpin Title
+            await reSpin.show();
+            await wait(1000);
+            await reSpin.hide();
+
+            reSpinBoard.show();
 
             await showAlien();
-            await showMagnet();
 
-            slot.table = reelTables.reSpinTable;
+            await showMagnet();
 
             for (const round of reSpinGame) {
                 greenAlien.transition[randomInt(3)].restart();
@@ -60,9 +69,12 @@ export function logic({slot, effects, reelTables, background}) {
 
                 app.once('SpinStopComplete', stopAttraction);
 
-                const {hasLink} = round;
+                const func = reSpinStopAnimation(round);
 
-                const func = hasLink && reSpinStopAnimation();
+                app.once('ShowResult', () => {
+                    greenAlien.transition[0].restart();
+                    redAlien.transition[0].restart();
+                });
 
                 await display(
                     round,
@@ -74,21 +86,26 @@ export function logic({slot, effects, reelTables, background}) {
             greenAlien.transition[1].restart();
             redAlien.transition[1].restart();
             await hideMagnet();
-
             hideAlien();
+
+            await reSpinBoard.hide();
+            normalBoard.show();
         }
 
         app.user.jackPot = jackPot;
-
-        slot.table = reelTables.normalTable;
 
         log('Round Complete...');
         app.emit('Idle');
     }
 
-    function reSpinStopAnimation() {
-        const sign = randomInt(1);
+    function reSpinStopAnimation({hasLink}) {
+        const number = randomInt(100);
 
+        const flag = hasLink ? 35 : 20;
+
+        if (number >= flag) return;
+
+        const sign = randomInt(1);
         const firstPos = sign ? 1 : 3;
         const lastPos = sign ? '+=' : '-=';
 
@@ -148,6 +165,8 @@ export function logic({slot, effects, reelTables, background}) {
 
         if (hasLink) {
             hideSymbols();
+
+            app.emit('ShowResult', result);
 
             show(effects, symbols);
 
