@@ -25,6 +25,9 @@ export function BigWin(view) {
         reset();
 
         view.transition['anim'].restart();
+
+        view.visible = true;
+
         await wait(1750);
 
         mount();

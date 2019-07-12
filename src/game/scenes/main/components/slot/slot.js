@@ -212,11 +212,14 @@ function Reel({view, table}) {
     reel.pos = 6;
     reel.table = table;
 
-    symbols.forEach((symbol) => {
-        symbol.icon = nth(symbol.idx, table);
+    symbols.forEach((symbol) =>
+        symbol.icon = nth(symbol.idx, table));
 
-        app.on('SpinStart', () => symbol.visible = true);
-    });
+    app.on('SpinStart', () =>
+        symbols.forEach((symbol) => symbol.visible = true));
+
+    app.on('ShowResult', () =>
+        symbols.forEach((symbol) => symbol.visible = false));
 
     return reel;
 }

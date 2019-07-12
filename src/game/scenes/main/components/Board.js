@@ -13,8 +13,7 @@ export function Normal(view) {
         view.children
             .filter(({name}) => name && name.includes('pos'))
             .map(({name, x, y}) => {
-                const score =
-                    new BitmapText('0', style);
+                const score = new BitmapText('0', style);
 
                 score.position.set(x, y);
 
@@ -28,15 +27,24 @@ export function Normal(view) {
                     PayLine(score);
                 }
 
+                app.on('UserBetChange', () => update(score));
+                app.on('JackPotChange', () => update(score));
+
                 return score;
             });
 
-    view.addChild(...scores);
+    return init();
 
-    view.show = show;
-    view.hide = hide;
+    function init() {
+        view.alpha = 0;
 
-    return view;
+        view.addChild(...scores);
+
+        view.show = show;
+        view.hide = hide;
+
+        return view;
+    }
 
     function show() {
         return fadeIn({targets: view}).finished;
@@ -52,19 +60,18 @@ export function ReSpin(view) {
         view.children
             .filter(({name}) => name.includes('pos'))
             .map(({name, x, y}) => {
-                const score =
-                    new BitmapText('0', style);
+                const score = new BitmapText('0', style);
 
                 score.anchor.set(0.5, 1);
                 score.position.set(x, y);
 
                 score.name = name.split('_')[1];
 
+                JackPot(score);
+
                 if (['2x', '3x'].includes(score.name)) {
                     score.scale.set(0.9, 0.8);
                 }
-
-                JackPot(score);
 
                 return score;
             });
@@ -73,12 +80,18 @@ export function ReSpin(view) {
         view.children
             .filter(({name}) => name.includes('planet'));
 
-    view.addChild(...scores);
+    return init();
 
-    view.show = show;
-    view.hide = hide;
+    function init() {
+        view.alpha = 0;
 
-    return view;
+        view.addChild(...scores);
+
+        view.show = show;
+        view.hide = hide;
+
+        return view;
+    }
 
     async function show() {
         view.alpha = 1;
@@ -120,67 +133,49 @@ function getOdds(name) {
     }[name];
 }
 
-function JackPot(view) {
-    const {name} = view;
-
-    let score = getScore();
-
-    view.text = currencyFormat(score);
-
-    app.on('UserBetChange', update);
-    app.on('JackPotChange', update);
-
-    return view;
-
-    function getScore() {
-        return currentBet() * getOdds(name) + app.user.jackPot[name];
-    }
-
-    function update() {
-        const newScore = getScore();
-
-        currencyChange({
-            range: [score, newScore],
-            targets: view,
-            duration: 500,
-        });
-
-        score = newScore;
-    }
-}
-
 function PayLine(view) {
-    const {name} = view;
+    view.score = getScore();
 
-    let score = getScore();
-
-    view.text = currencyFormat(score);
+    view.text = currencyFormat(view.score);
 
     view.scale.set(0.9, 0.8);
 
-    app.on('UserBetChange', update);
+    view.getScore = getScore;
 
     return view;
 
     function getScore() {
-        return currentBet() * getOdds(name);
-    }
-
-    function update() {
-        const newScore = getScore();
-
-        currencyChange({
-            range: [score, newScore],
-            targets: view,
-            duration: 500,
-        });
-
-        score = newScore;
+        return app.user.currentBet * getOdds(view.name);
     }
 }
 
-function currentBet() {
-    const {bet, betOptions} = app.user;
+function JackPot(view) {
+    view = PayLine(view);
 
-    return betOptions[bet];
+    view.score = getScore();
+
+    view.scale.set(1);
+
+    view.getScore = getScore;
+
+    return view;
+
+    function getScore() {
+        const {name} = view;
+        return app.user.currentBet * getOdds(name) + app.user.jackPot[name];
+    }
 }
+
+function update(view) {
+    const newScore = view.getScore();
+
+    currencyChange({
+        range: [view.score, newScore],
+        targets: view,
+        duration: 500,
+    });
+
+    view.score = newScore;
+}
+
+

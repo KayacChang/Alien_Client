@@ -7,12 +7,14 @@ const empty =
         .find(({name}) => name === 'empty')
         .id;
 
-export async function spin(reels, icons, func) {
+export async function spin({reels, symbols, func}) {
+    if (!reels.length) reels = [reels];
+
     await start(reels);
 
     await wait(3000);
 
-    return stop(reels, icons, func);
+    return stop(reels, symbols, func);
 }
 
 async function start(reels) {

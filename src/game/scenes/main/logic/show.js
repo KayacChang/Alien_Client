@@ -1,12 +1,16 @@
 import {symbolConfig} from '../data';
 
-import {randomInt} from '../../../../general';
+import {randomInt, wait} from '../../../../general';
 
-export function show(effects, icons) {
-    icons.forEach((icon, index) => {
+export async function show(effects, result) {
+    app.emit('ShowResult', result);
+
+    const {symbols} = result;
+
+    symbols.forEach((id, index) => {
         const effect = effects[index];
 
-        const name = getSymbolNameBy(icon);
+        const name = getSymbolNameBy(id);
 
         if (name === 'empty') return;
 
@@ -16,6 +20,8 @@ export function show(effects, icons) {
                     normal
         )(effect, name);
     });
+
+    await wait(2000);
 }
 
 function getSymbolNameBy(icon) {

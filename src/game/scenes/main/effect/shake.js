@@ -1,35 +1,34 @@
-import {randomInt} from '../../../../general/algorithm';
+import {randomInt, nextFrame} from '../../../../general';
 
-export function shake({targets, duration, amplitude}) {
+const {assign} = Object;
+
+export function shake({targets, duration = 0, amplitude = 0}) {
     if (!targets.length) targets = [targets];
 
-    targets.forEach((target) => _shake(target));
+    const range = [-1 * amplitude, amplitude];
 
     const begin = new Date();
 
-    function _shake(target, pos) {
-        const range = [-1 * amplitude, amplitude];
+    const tasks = targets.map((target) => call(target));
 
+    return Promise.all(tasks);
+
+    async function call(target, pos) {
         const {x, y} = pos || target;
-        setPos(
-            x + randomInt(...range),
-            y + randomInt(...range),
-        );
 
-        requestAnimationFrame(() =>
-            check() ?
-                _shake(target, {x, y}) :
-                setPos(x, y),
-        );
+        assign(target, {
+            x: x + randomInt(...range),
+            y: y + randomInt(...range),
+        });
 
-        function setPos(x, y) {
-            target.x = x;
-            target.y = y;
-        }
+        await nextFrame();
+
+        return isTimeout() ?
+            assign(target, {x, y}) : call(target, {x, y});
     }
 
-    function check() {
+    function isTimeout() {
         const now = new Date();
-        return (now - begin) < duration;
+        return (now - begin) > duration;
     }
 }

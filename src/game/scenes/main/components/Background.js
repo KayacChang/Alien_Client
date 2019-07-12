@@ -1,66 +1,54 @@
 import {Normal, ReSpin} from './Board';
-import {wait} from '../../../../general';
-import {randomInt} from '../../../../general';
+import {nextFrame, wait} from '../../../../general';
+import {Alien} from './Alien';
+import {shake} from '../effect';
+import {BigWin} from './BigWin';
 
 export function Background(view) {
     const normalBoard =
-        Normal(
-            select('board@normal'),
-        );
+        Normal(select('board@normal'));
 
     const reSpinBoard =
-        ReSpin(
-            select('board@respin'),
-        );
+        ReSpin(select('board@respin'));
 
-    const boardEffect = select('board@effect');
+    const boardEffect = BoardEffect();
 
-    const [bigWin, jackPot, reSpin] =
-        ['BigWin', 'JackPot', 'ReSpin'].map(TextEffect);
+    const bigwin =
+        BigWin(select('bigWin'));
 
-    const ShowAlien = view.transition['ShowAlien'];
-    const HideAlien = view.transition['HideAlien'];
-
-    const greenAlien = view.getChildByName('alien@green');
-    const redAlien = view.getChildByName('alien@red');
+    const [greenAlien, redAlien] =
+        ['green', 'red']
+            .map((name) => Alien(select(`alien@${name}`)));
 
     const electron = view.getChildByName('effect@electron');
-
-    greenAlien.magnet = greenAlien.getChildByName('magnet');
-    redAlien.magnet = redAlien.getChildByName('magnet');
 
     let shaking = false;
     let charging = false;
 
-    init();
-
-    return {
-        bigWin,
-        jackPot,
-        reSpin,
-
-        normalBoard,
-        reSpinBoard,
-
-        greenAlien,
-        redAlien,
-
-        showAlien,
-        hideAlien,
-
-        showMagnet,
-        hideMagnet,
-
-        startAttraction,
-        stopAttraction,
-    };
+    return init();
 
     function init() {
         boardEffect.visible = false;
-        normalBoard.alpha = 0;
-        reSpinBoard.alpha = 0;
 
-        app.once('Idle', () => requestAnimationFrame(onIdle));
+        app.once('Idle', () => nextFrame().then(onIdle));
+
+        return {
+            bigwin,
+
+            boardEffect,
+
+            normalBoard,
+            reSpinBoard,
+
+            greenAlien,
+            redAlien,
+
+            showAlien,
+            hideAlien,
+
+            startAttraction,
+            stopAttraction,
+        };
 
         async function onIdle() {
             await showAlien();
@@ -71,6 +59,23 @@ export function Background(view) {
 
             await hideAlien();
         }
+    }
+
+    function BoardEffect() {
+        const background = select('board@effect');
+
+        return {
+            bigWin: TextEffect('BigWin'),
+            jackPot: TextEffect('JackPot'),
+            reSpin: TextEffect('ReSpin'),
+
+            get visible() {
+                return background.visible;
+            },
+            set visible(flag) {
+                background.visible = flag;
+            },
+        };
     }
 
     function TextEffect(name) {
@@ -92,55 +97,29 @@ export function Background(view) {
             return Show.finished;
         }
 
-        function hide() {
+        async function hide() {
             Hide.restart();
 
-            return Hide
-                .finished
-                .then(() => boardEffect.visible = false);
+            await Hide.finished;
+
+            boardEffect.visible = false;
         }
     }
 
-    function select(name) {
-        return view.getChildByName(name);
-    }
-
     function showAlien() {
+        const ShowAlien = view.transition['ShowAlien'];
+
         ShowAlien.restart();
 
         return ShowAlien.finished;
     }
 
     function hideAlien() {
+        const HideAlien = view.transition['HideAlien'];
+
         HideAlien.restart();
 
         return HideAlien.finished;
-    }
-
-    function showMagnet() {
-        const showGreenMagnet = greenAlien.transition['ShowMagnet'];
-        const showRedMagnet = redAlien.transition['ShowMagnet'];
-
-        showGreenMagnet.restart();
-        showRedMagnet.restart();
-
-        return Promise.all([
-            showGreenMagnet.finished,
-            showRedMagnet.finished,
-        ]);
-    }
-
-    function hideMagnet() {
-        const hideGreenMagnet = greenAlien.transition['HideMagnet'];
-        const hideRedMagnet = redAlien.transition['HideMagnet'];
-
-        hideGreenMagnet.restart();
-        hideRedMagnet.restart();
-
-        return Promise.all([
-            hideGreenMagnet.finished,
-            hideRedMagnet.finished,
-        ]);
     }
 
     function startAttraction(amplitude = 3) {
@@ -151,61 +130,39 @@ export function Background(view) {
     }
 
     function stopAttraction() {
-        stopShaking();
-        stopCharging();
-    }
-
-    function startShaking(amplitude = 3) {
-        shaking = true;
-
-        shake(greenAlien);
-        shake(redAlien);
-
-        function shake(target, pos) {
-            const range = [-1 * amplitude, amplitude];
-
-            const {x, y} = pos || target.position;
-            target.position.x = x + randomInt(...range);
-            target.position.y = y + randomInt(...range);
-
-            requestAnimationFrame(() =>
-                (shaking) ?
-                    shake(target, {x, y}) :
-                    target.position.set(x, y),
-            );
-        }
-    }
-
-    function stopShaking() {
         shaking = false;
-    }
-
-    function startCharging(amplitude = 3) {
-        electron.visible = true;
-
-        charging = true;
-
-        shake(electron);
-
-        function shake(target, pos) {
-            const range = [-1 * amplitude, amplitude];
-
-            const {x, y} = pos || target.position;
-            target.position.x = x + randomInt(...range);
-            target.position.y = y + randomInt(...range);
-
-            requestAnimationFrame(() =>
-                (charging) ?
-                    shake(target, {x, y}) :
-                    target.position.set(x, y),
-            );
-        }
-    }
-
-    function stopCharging() {
         charging = false;
         electron.visible = false;
     }
+
+    async function startShaking(amplitude = 3) {
+        shaking = true;
+
+        const targets = [greenAlien, redAlien];
+
+        const greenPos = {
+            x : greenAlien.x,
+            y: greenAlien.y,
+        };
+
+        const redPos = {
+            x : greenAlien.x,
+            y: greenAlien.y,
+        };
+
+        while (shaking) await shake({targets, amplitude});
+
+
+    }
+
+    async function startCharging(amplitude = 3) {
+        electron.visible = true;
+        charging = true;
+
+        while (charging) await shake({targets: electron, amplitude});
+    }
+
+    function select(name) {
+        return view.getChildByName(name);
+    }
 }
-
-

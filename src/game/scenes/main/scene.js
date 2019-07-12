@@ -4,13 +4,13 @@ import {Background, BigWin, SlotMachine, Waters} from './components';
 
 import {logic} from './logic';
 
-export function create(reelTables) {
+export function create({normalTable}) {
     const create = addPackage(app, 'main');
     const scene = create('MainScene');
 
     const slot = SlotMachine({
         view: scene,
-        table: reelTables.normalTable,
+        table: normalTable,
     });
 
     const effects =
@@ -27,17 +27,13 @@ export function create(reelTables) {
             select('background'),
         );
 
-        window.background = background;
-
         Waters(scene);
 
-        BigWin(
-            select('bigWin'),
-        );
+
 
         logic({
-            reelTables, slot, effects,
-
+            slot,
+            effects,
             background,
         });
     }

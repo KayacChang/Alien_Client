@@ -97,6 +97,10 @@ export function User() {
             app.emit('UserBetChange', bet);
         },
 
+        get currentBet() {
+            return betOptions[bet];
+        },
+
         get isBetLock() {
             return isBetLock;
         },
