@@ -2,16 +2,15 @@ import anime from 'animejs';
 
 const config = {
     duration: 1000,
-    easing: 'easeOutQuart',
 };
 
 export function fadeIn({targets, ...options}) {
-    const alpha = 1;
-
     const param = {
         targets,
 
-        alpha,
+        easing: 'easeOutQuart',
+        alpha: 1,
+
         ...(config),
         ...(options),
     };
@@ -20,12 +19,12 @@ export function fadeIn({targets, ...options}) {
 }
 
 export function fadeOut({targets, ...options}) {
-    const alpha = 0;
-
     const param = {
         targets,
 
-        alpha,
+        easing: 'easeInQuart',
+        alpha: 0,
+
         ...(config),
         ...(options),
     };

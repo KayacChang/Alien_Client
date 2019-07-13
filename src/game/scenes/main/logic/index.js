@@ -72,7 +72,7 @@ async function clearAccount({scores, background}) {
 
         await bigwin.play(scores);
 
-        fadeIn({targets: app.control.main, alpha});
+        await fadeIn({targets: app.control.main, alpha}).finished;
     }
 
     app.user.cash += scores;

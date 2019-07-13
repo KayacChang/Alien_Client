@@ -1,6 +1,10 @@
 import anime from 'animejs';
 import {wait} from '../../../../../general';
-import {symbolConfig} from '../../data';
+import {
+    MAYBE_BONUS_DURATION,
+    SPIN_STOP_INTERVAL,
+    symbolConfig,
+} from '../../data';
 
 const empty =
     symbolConfig
@@ -31,8 +35,8 @@ async function start(reels) {
                 duration: 500,
             })
             .add({
-                pos: '+=' + 100,
-                duration: 10000,
+                pos: '+=' + 150,
+                duration: 15000,
             });
 
         await wait(250);
@@ -46,8 +50,12 @@ async function stop(reels, icons, func) {
 
     const displaySymbols = [];
 
+    let isMaybeBonus = false;
+
     for (const reel of reels) {
         const index = reel.index;
+
+        if (isMaybeBonus) await wait(MAYBE_BONUS_DURATION);
 
         anime.remove(reel);
 
@@ -58,6 +66,8 @@ async function stop(reels, icons, func) {
         displaySymbols.push(displaySymbol);
 
         const icon = icons[index];
+
+        isMaybeBonus = isMaybeBonus || (icon === '00');
 
         if (icon !== empty) {
             displaySymbol.icon = icons[index];
@@ -82,12 +92,14 @@ async function stop(reels, icons, func) {
 
         stops.push(stop);
 
-        await wait(250);
+        await wait(SPIN_STOP_INTERVAL);
+
+        if (isMaybeBonus) app.emit('MaybeBonus', reel);
     }
 
     await Promise.all(stops);
 
-    app.emit('SpinStopComplete');
+    app.emit('SpinEnd');
 
     return displaySymbols;
 }

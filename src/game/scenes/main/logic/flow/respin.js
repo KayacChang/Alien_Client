@@ -41,7 +41,7 @@ function setEvents({background, reels}) {
     app.on('SpinStart', onSpinStart);
     app.on('ShowResult', onShowResult);
     app.on('Attraction', onAttraction);
-    app.on('SpinStopComplete', stopAttraction);
+    app.on('SpinEnd', stopAttraction);
 
     return {off};
 
@@ -49,7 +49,7 @@ function setEvents({background, reels}) {
         app.off('SpinStart', onSpinStart);
         app.off('ShowResult', onShowResult);
         app.off('Attraction', onAttraction);
-        app.off('SpinStopComplete', stopAttraction);
+        app.off('SpinEnd', stopAttraction);
     }
 
     function onSpinStart() {
