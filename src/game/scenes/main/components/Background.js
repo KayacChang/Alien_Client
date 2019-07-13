@@ -90,9 +90,9 @@ export function Background(view) {
         async function show() {
             if (normalBoard.alpha !== 0) await normalBoard.hide();
 
-            Show.restart();
+            boardEffect.visible = false;
 
-            boardEffect.visible = true;
+            Show.restart();
 
             return Show.finished;
         }
@@ -140,19 +140,7 @@ export function Background(view) {
 
         const targets = [greenAlien, redAlien];
 
-        const greenPos = {
-            x : greenAlien.x,
-            y: greenAlien.y,
-        };
-
-        const redPos = {
-            x : greenAlien.x,
-            y: greenAlien.y,
-        };
-
         while (shaking) await shake({targets, amplitude});
-
-
     }
 
     async function startCharging(amplitude = 3) {

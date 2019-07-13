@@ -29,8 +29,6 @@ export function create({normalTable}) {
 
         Waters(scene);
 
-
-
         logic({
             slot,
             effects,

@@ -1,9 +1,35 @@
-import {randomInt, wait} from '../../../../general';
+import {randomInt, wait} from '../../../../../general';
 import anime from 'animejs';
-import {shake} from '../effect';
+import {shake} from '../../effect';
 import {NormalGame} from './normal';
 
 export async function ReSpinGame({results, reels, effects, background}) {
+    const events = setEvents({background, reels});
+
+    await onReSpinStart(background);
+
+    let total = 0;
+
+    for (const result of results) {
+        total +=
+            await NormalGame({
+                result,
+                reels,
+                effects,
+                func: reSpinStopAnimation(result),
+            });
+
+        app.user.lastWin = total;
+    }
+
+    await onReSpinEnd(background, total);
+
+    events.off();
+
+    return total;
+}
+
+function setEvents({background, reels}) {
     const {
         greenAlien,
         redAlien,
@@ -12,50 +38,44 @@ export async function ReSpinGame({results, reels, effects, background}) {
         stopAttraction,
     } = background;
 
-    await onReSpinStart(background);
+    app.on('SpinStart', onSpinStart);
+    app.on('ShowResult', onShowResult);
+    app.on('Attraction', onAttraction);
+    app.on('SpinStopComplete', stopAttraction);
 
-    let total = 0;
+    return {off};
 
-    for (const result of results) {
-        app.once('SpinStart', () => {
-            greenAlien.happy();
-            redAlien.happy();
-
-            startAttraction();
-        });
-
-        app.once('ShowResult', () => {
-            greenAlien.happy();
-            redAlien.happy();
-        });
-
-        app.once('Attraction', () => {
-            greenAlien.shy();
-            redAlien.shy();
-
-            startAttraction(24);
-
-            shake({
-                targets: reels.symbols,
-                duration: 2000,
-                amplitude: 12,
-            });
-        });
-
-        app.once('SpinStopComplete', stopAttraction);
-
-        total +=
-            await NormalGame({
-                result,
-                reels,
-                effects,
-                func: reSpinStopAnimation(result),
-            });
+    function off() {
+        app.off('SpinStart', onSpinStart);
+        app.off('ShowResult', onShowResult);
+        app.off('Attraction', onAttraction);
+        app.off('SpinStopComplete', stopAttraction);
     }
 
-    await onReSpinEnd(background, total);
+    function onSpinStart() {
+        greenAlien.happy();
+        redAlien.happy();
 
-    return total;
+        startAttraction();
+    }
+
+    function onShowResult() {
+        greenAlien.happy();
+        redAlien.happy();
+    }
+
+    function onAttraction() {
+        greenAlien.shy();
+        redAlien.shy();
+
+        startAttraction(24);
+
+        shake({
+            targets: reels.symbols,
+            duration: 2000,
+            amplitude: 12,
+        });
+    }
 }
 
 async function onReSpinStart(background) {

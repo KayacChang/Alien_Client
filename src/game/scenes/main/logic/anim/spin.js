@@ -1,6 +1,6 @@
 import anime from 'animejs';
-import {wait} from '../../../../general';
-import {symbolConfig} from '../data';
+import {wait} from '../../../../../general';
+import {symbolConfig} from '../../data';
 
 const empty =
     symbolConfig

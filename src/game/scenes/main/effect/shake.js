@@ -14,17 +14,17 @@ export function shake({targets, duration = 0, amplitude = 0}) {
     return Promise.all(tasks);
 
     async function call(target, pos) {
-        const {x, y} = pos || target;
+        pos = pos || {x: target.x, y: target.y};
 
         assign(target, {
-            x: x + randomInt(...range),
-            y: y + randomInt(...range),
+            x: pos.x + randomInt(...range),
+            y: pos.y + randomInt(...range),
         });
 
         await nextFrame();
 
         return isTimeout() ?
-            assign(target, {x, y}) : call(target, {x, y});
+            assign(target, pos) : call(target, pos);
     }
 
     function isTimeout() {

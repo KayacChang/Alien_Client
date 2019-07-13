@@ -79,6 +79,9 @@ export function App() {
         once(event, listener) {
             eventCore.once(event, listener);
         },
+        off(event, listener) {
+            eventCore.off(event, listener);
+        },
         emit(event, ...args) {
             eventCore.emit(event, ...args);
         },
