@@ -26,6 +26,8 @@ export function create({normalTable}) {
             select('background'),
         );
 
+        window.background = background;
+
         const lights =
             scene.children
                 .filter(({name}) => name && name.includes('light'))

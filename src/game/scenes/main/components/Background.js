@@ -16,6 +16,9 @@ export function Background(view) {
     const bigwin =
         BigWin(select('bigWin'));
 
+    const jackpot =
+        BigWin(select('jackpot'));
+
     const [greenAlien, redAlien] =
         ['green', 'red']
             .map((name) => Alien(select(`alien@${name}`)));
@@ -34,6 +37,7 @@ export function Background(view) {
 
         return {
             bigwin,
+            jackpot,
 
             boardEffect,
 

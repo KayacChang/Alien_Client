@@ -22,24 +22,28 @@ export function BigWin(view) {
     return {play};
 
     async function play(score) {
-        reset();
+        view.removeChild(field);
+
+        const {alpha} = app.control.main;
+
+        await fadeOut({targets: app.control.main}).finished;
 
         view.transition['anim'].restart();
 
+        await wait(250);
+
         view.visible = true;
 
-        await wait(1750);
+        await wait(1500);
 
         mount();
 
         await show(score);
 
-        await clear();
-    }
-
-    function reset() {
-        view.visible = true;
-        view.removeChild(field);
+        await Promise.all([
+            fadeIn({targets: app.control.main, alpha}).finished,
+            clear(),
+        ]);
     }
 
     function mount() {

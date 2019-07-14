@@ -73,6 +73,9 @@ export function ReSpin(view) {
                     score.scale.set(0.9, 0.8);
                 }
 
+                app.on('UserBetChange', () => update(score));
+                app.on('JackPotChange', () => update(score));
+
                 return score;
             });
 

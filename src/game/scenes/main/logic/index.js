@@ -1,7 +1,6 @@
 import {log, table, divide} from '../../../../general';
 
 import {NormalGame, ReSpinGame} from './flow';
-import {fadeIn, fadeOut} from '../effect';
 
 const BET_TO_BIGWIN = 10;
 
@@ -66,13 +65,7 @@ async function clearAccount({scores, background}) {
     const {bigwin} = background;
 
     if (divide(scores, app.user.currentBet) > BET_TO_BIGWIN) {
-        const {alpha} = app.control.main;
-
-        fadeOut({targets: app.control.main});
-
         await bigwin.play(scores);
-
-        await fadeIn({targets: app.control.main, alpha}).finished;
     }
 
     app.user.cash += scores;
