@@ -4,8 +4,16 @@ import {NormalGame, ReSpinGame} from './flow';
 
 const BET_TO_BIGWIN = 10;
 
+function isBigWin(scores) {
+    return divide(scores, app.user.currentBet) > BET_TO_BIGWIN;
+}
+
 export function logic({slot, effects, background}) {
     app.on('GameResult', onGameResult);
+
+    const {
+        bigwin, boardEffect,
+    } = background;
 
     async function onGameResult(result) {
         log('onGameResult =============');
@@ -28,11 +36,18 @@ export function logic({slot, effects, background}) {
                 result: normalGame,
                 reels: slot.reels,
                 effects,
+                background,
             });
 
         app.user.lastWin = scores;
 
-        await clearAccount({scores, background});
+        if (!result.isJackpot && isBigWin(scores)) {
+            await boardEffect.bigwin.show();
+
+            await bigwin.play(scores);
+        }
+
+        app.user.cash += scores;
 
         if (hasReSpin) {
             log('onReSpinGame =============');
@@ -51,7 +66,13 @@ export function logic({slot, effects, background}) {
                     background,
                 });
 
-            await clearAccount({scores, background});
+            if (isBigWin(scores)) {
+                await boardEffect.bigwin.show();
+
+                await bigwin.play(scores);
+            }
+
+            app.user.cash += scores;
         }
 
         app.user.jackPot = jackPot;
@@ -59,15 +80,5 @@ export function logic({slot, effects, background}) {
         log('Round Complete...');
         app.emit('Idle');
     }
-}
-
-async function clearAccount({scores, background}) {
-    const {bigwin} = background;
-
-    if (divide(scores, app.user.currentBet) > BET_TO_BIGWIN) {
-        await bigwin.play(scores);
-    }
-
-    app.user.cash += scores;
 }
 

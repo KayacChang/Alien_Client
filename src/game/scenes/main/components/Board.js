@@ -3,7 +3,7 @@ import {extras} from 'pixi.js';
 const {BitmapText} = extras;
 
 import {currencyFormat, wait} from '../../../../general';
-import {currencyChange, fadeIn, fadeOut} from '../effect';
+import {currencyChange, fadeIn, fadeOut, twink} from '../effect';
 import anime from 'animejs';
 
 const style = {font: '30px Score'};
@@ -36,6 +36,23 @@ export function Normal(view) {
     return init();
 
     function init() {
+        let twinkling = false;
+
+        app.on('ShowResult', async (result) => {
+            const target = scores
+                .find((score) => score.getScore() === result.scores);
+            if (!target) debugger;
+
+            const {name} = target;
+
+            const box = view.getChildByName(`box@${name}`);
+
+            twinkling = true;
+            while (twinkling) await twink({targets: box, interval: 500});
+        });
+
+        app.on('SpinStart', () => twinkling = false);
+
         view.alpha = 0;
 
         view.addChild(...scores);

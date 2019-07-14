@@ -3,7 +3,7 @@ import {addPackage} from 'pixi_fairygui';
 import {Background, SlotMachine, Waters} from './components';
 
 import {logic} from './logic';
-import {fadeIn, fadeOut} from './effect';
+import {twink} from './effect';
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -52,7 +52,7 @@ export function create({normalTable}) {
 
             lights[current].off();
 
-            if (next < lights.length) lights[next].twink();
+            if (next < lights.length) lights[next].show();
         }
     }
 
@@ -68,16 +68,11 @@ function id({name}) {
 function Light(view) {
     let twinkling = false;
 
-    return {twink, off};
+    return {show, off};
 
-    async function twink() {
+    async function show() {
         twinkling = true;
-        const targets = view;
-
-        while (twinkling) {
-            await fadeIn({targets, duration: 500}).finished;
-            await fadeOut({targets, duration: 500}).finished;
-        }
+        while (twinkling) await twink({targets: view, interval: 500});
     }
 
     function off() {

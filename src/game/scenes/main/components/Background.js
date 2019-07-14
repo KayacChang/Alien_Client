@@ -69,9 +69,9 @@ export function Background(view) {
         const background = select('board@effect');
 
         return {
-            bigWin: TextEffect('BigWin'),
-            jackPot: TextEffect('JackPot'),
-            reSpin: TextEffect('ReSpin'),
+            bigwin: TextEffect('BigWin'),
+            jackpot: TextEffect('JackPot'),
+            respin: TextEffect('ReSpin'),
 
             get visible() {
                 return background.visible;
@@ -89,7 +89,7 @@ export function Background(view) {
         Show.pause();
         Hide.pause();
 
-        return {show, hide};
+        return {show};
 
         async function show() {
             if (normalBoard.alpha !== 0) await normalBoard.hide();
@@ -98,7 +98,11 @@ export function Background(view) {
 
             Show.restart();
 
-            return Show.finished;
+            await Show.finished;
+
+            await wait(1000);
+
+            await hide();
         }
 
         async function hide() {

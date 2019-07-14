@@ -1,4 +1,4 @@
-import {randomInt, wait} from '../../../../../general';
+import {randomInt} from '../../../../../general';
 import anime from 'animejs';
 import {shake} from '../../effect';
 import {NormalGame} from './normal';
@@ -17,6 +17,7 @@ export async function ReSpinGame({results, reels, effects, background}) {
                 reels,
                 effects,
                 func: reSpinStopAnimation(result),
+                background,
             });
 
         app.user.lastWin = total;
@@ -89,9 +90,7 @@ async function onReSpinStart(background) {
         showAlien,
     } = background;
 
-    await boardEffect.reSpin.show();
-    await wait(1000);
-    await boardEffect.reSpin.hide();
+    await boardEffect.respin.show();
 
     await Promise.all([
         reSpinBoard.show(),
@@ -130,7 +129,7 @@ async function onReSpinEnd(background, total) {
         reSpinBoard.hide(),
     ]);
 
-    return normalBoard.show();
+    normalBoard.show();
 }
 
 function reSpinStopAnimation({hasLink}) {
