@@ -155,14 +155,15 @@ export function Service(prodKey) {
                         currencies.get(type).rate = rate;
                     });
 
-                const now = data['serversetting']['servertime'] * 1000;
-                const maintain = data['serversetting']['maintaintime'] * 1000;
-
-                time.now = new Date(now);
-                time.warning = new Date(maintain - (10 * 60 * 1000));
-                time.maintain = new Date(maintain);
-
-                time.timer = setInterval(checkTime, 1000);
+                // const now = data['serversetting']['servertime'] * 1000;
+                // const maintain =
+                // data['serversetting']['maintaintime'] * 1000;
+                //
+                // time.now = new Date(now);
+                // time.warning = new Date(maintain - (10 * 60 * 1000));
+                // time.maintain = new Date(maintain);
+                //
+                // time.timer = setInterval(checkTime, 1000);
 
                 return data;
             });
