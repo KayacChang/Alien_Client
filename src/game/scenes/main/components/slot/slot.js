@@ -24,7 +24,8 @@ export function SlotMachine({view, table}) {
             .map((view, index) => Reel({
                 view,
                 table: table[index],
-            }));
+            }))
+            .sort((a, b) => a.index - b.index);
 
     return {
         get reels() {

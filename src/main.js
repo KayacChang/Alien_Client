@@ -27,11 +27,11 @@ async function main() {
             I18N_URL: res['i18nURL'],
         };
 
+        global.translate = await Translate();
+
         global.app = App();
 
         app.service = new Service(key);
-
-        global.translate = await Translate();
 
         // Import Load Scene
         const LoadScene = await import('./game/scenes/load/scene');

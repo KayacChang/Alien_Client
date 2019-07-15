@@ -3,7 +3,7 @@ import {addPackage} from 'pixi_fairygui';
 import {Background, SlotMachine, Waters} from './components';
 
 import {logic} from './logic';
-import {twink} from './effect';
+import {fadeIn, fadeOut, twink} from './effect';
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -25,6 +25,14 @@ export function create({normalTable}) {
         const background = Background(
             select('background'),
         );
+
+        app.on('RespinStart', () => {
+            const targets = select('shadow');
+
+            fadeIn({targets, alpha: 0.7});
+
+            app.once('Idle', () => fadeOut({targets}));
+        });
 
         window.background = background;
 

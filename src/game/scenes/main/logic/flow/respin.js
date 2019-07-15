@@ -80,6 +80,7 @@ function setEvents({background, reels}) {
 }
 
 async function onReSpinStart(background) {
+    app.emit('RespinStart');
     const {
         boardEffect,
         reSpinBoard,

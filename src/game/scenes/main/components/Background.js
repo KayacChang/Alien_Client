@@ -100,8 +100,6 @@ export function Background(view) {
 
             await Show.finished;
 
-            await wait(1000);
-
             await hide();
         }
 
