@@ -70,20 +70,20 @@ async function main() {
 
         app.stage.removeChild(loadScene);
 
-        // select('script').forEach(remove);
+        select('script').forEach(remove);
 
         app.resize();
 
-        // document.title = translate('title');
+        document.title = translate('title');
 
         app.emit('Idle');
         //
     } catch (error) {
         console.error(error);
 
-        // const msg = {title: error.message};
+        const msg = {title: error.message};
 
-        // app.alert.error(msg);
+        app.alert.error(msg);
     }
 }
 

@@ -56,7 +56,7 @@ export function Translate() {
 
             loadPath: ENV.I18N_URL,
 
-            ns: ['cat', 'common'],
-            defaultNS: 'cat',
+            ns: ['alien', 'common'],
+            defaultNS: 'alien',
         });
 }
