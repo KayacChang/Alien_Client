@@ -97,6 +97,7 @@ export function Background(view) {
             boardEffect.visible = false;
 
             Show.restart();
+            app.sound.play('Electron');
 
             await Show.finished;
 
@@ -116,6 +117,7 @@ export function Background(view) {
         const ShowAlien = view.transition['ShowAlien'];
 
         ShowAlien.restart();
+        app.sound.play('Alien_Fly');
 
         return ShowAlien.finished;
     }
@@ -124,6 +126,7 @@ export function Background(view) {
         const HideAlien = view.transition['HideAlien'];
 
         HideAlien.restart();
+        app.sound.play('Alien_Fly');
 
         return HideAlien.finished;
     }
@@ -154,6 +157,10 @@ export function Background(view) {
         charging = true;
 
         while (charging) await shake({targets: electron, amplitude});
+        while (charging) {
+            app.sound.play('Electron');
+            await wait(4000);
+        }
     }
 
     function select(name) {

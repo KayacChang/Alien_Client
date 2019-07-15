@@ -1,9 +1,8 @@
 import {extras} from 'pixi.js';
-
 const {BitmapText} = extras;
 
 import {currencyFormat, wait} from '../../../../general';
-import {currencyChange, fadeIn, fadeOut, twink} from '../effect';
+import {currencyChange, fadeIn, fadeOut} from '../effect';
 import anime from 'animejs';
 
 const style = {font: '30px Score'};
@@ -36,22 +35,58 @@ export function Normal(view) {
     return init();
 
     function init() {
-        let twinkling = false;
+        const table = {
+            '1': '5x',
+            '2': '3x',
+            '3': '2x',
+            '4': 'seven',
+            '5': '3bar',
+            '6': '2bar',
+            '7': '1bar',
+        };
 
-        app.on('ShowResult', async (result) => {
-            const target = scores
-                .find((score) => score.getScore() === result.scores);
-            if (!target) debugger;
+        app.on('ShowResult', async ({symbols}) => {
+            const includeJackpot =
+                ['1', '2', '3'].includes(symbols[1]);
 
-            const {name} = target;
+            const firstReelWild =
+                symbols[0] === '00';
+            const thirdReelWild =
+                symbols[2] === '02';
+            const bothReelWild =
+                firstReelWild && thirdReelWild;
+
+            const allSame =
+                symbols.every((symbol) => symbols[0] === symbol);
+            const secondThirdSame =
+                symbols[1] === symbols[2];
+            const firstSecondSame =
+                symbols[0] === symbols[1];
+            const firstThirdSame =
+                symbols[0] === symbols[2];
+
+            let name = 'any';
+
+            if (
+                (includeJackpot && bothReelWild) ||
+                (firstReelWild && secondThirdSame)
+            ) {
+                name = table[symbols[1]];
+            }
+            if (
+                allSame ||
+                (includeJackpot && firstThirdSame) ||
+                (thirdReelWild && firstSecondSame)
+            ) {
+                name = table[symbols[0]];
+            }
 
             const box = view.getChildByName(`box@${name}`);
 
-            twinkling = true;
-            while (twinkling) await twink({targets: box, interval: 500});
-        });
+            await fadeIn({targets: box});
 
-        app.on('SpinStart', () => twinkling = false);
+            app.once('SpinStart', () => fadeOut({targets: box}));
+        });
 
         view.alpha = 0;
 

@@ -16,9 +16,22 @@ export async function spin({reels, symbols, func}) {
 
     await start(reels);
 
-    await wait(3000);
+    await duration();
 
     return stop(reels, symbols, func);
+}
+
+async function duration() {
+    app.emit('SpinDuration');
+
+    let time = 2000;
+
+    app.on('QuickStop', () => time = 0);
+
+    while (time > 0) {
+        await wait(10);
+        time -= 10;
+    }
 }
 
 async function start(reels) {

@@ -49,9 +49,8 @@ export function Sound({loader}) {
     }
 
     document
-        .addEventListener('visibilitychange', () => {
-            return mute(document.hidden);
-        });
+        .addEventListener('visibilitychange',
+            () => mute(document.hidden));
 
     return {
         play, mute, volume, getBy, stop,

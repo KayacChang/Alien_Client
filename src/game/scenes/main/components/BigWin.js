@@ -30,6 +30,9 @@ export function BigWin(view) {
 
         view.transition['anim'].restart();
 
+        app.sound.mute(true, 'Normal_BGM');
+        app.sound.play('Big_Win');
+
         await wait(250);
 
         view.visible = true;
@@ -44,6 +47,8 @@ export function BigWin(view) {
             fadeIn({targets: app.control.main, alpha}).finished,
             clear(),
         ]);
+
+        app.sound.mute(false, 'Normal_BGM');
     }
 
     function mount() {

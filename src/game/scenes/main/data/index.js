@@ -1,5 +1,6 @@
 import {sprites} from './sprites';
 import {symbols, symbolConfig} from './symbols';
+import {sounds} from './sound';
 
 import SCORE_URL from '../assets/fonts/score.xml';
 import '../assets/fonts/score.png';
@@ -12,6 +13,7 @@ export function reserve() {
     return [
         ...(sprites),
         ...(symbols),
+        ...(sounds),
 
         {name: 'Score', url: SCORE_URL},
         {name: 'BigWin', url: BIGWIN_URL},

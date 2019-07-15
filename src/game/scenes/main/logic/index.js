@@ -12,7 +12,7 @@ export function logic({slot, effects, background}) {
     app.on('GameResult', onGameResult);
 
     const {
-        bigwin, boardEffect,
+        bigwin, boardEffect, normalBoard,
     } = background;
 
     async function onGameResult(result) {
@@ -28,8 +28,10 @@ export function logic({slot, effects, background}) {
             jackPot,
         } = result;
 
-        log('onNormalGame =============');
-        table(normalGame);
+        if (normalGame.hasLink) {
+            log('onNormalGame =============');
+            table(normalGame);
+        }
 
         const scores =
             await NormalGame({
@@ -41,11 +43,7 @@ export function logic({slot, effects, background}) {
 
         app.user.lastWin = scores;
 
-        if (!result.isJackpot && isBigWin(scores)) {
-            await boardEffect.bigwin.show();
-
-            await bigwin.play(scores);
-        }
+        if (!result.isJackpot && isBigWin(scores)) await playBigWin();
 
         app.user.cash += scores;
 
@@ -66,11 +64,7 @@ export function logic({slot, effects, background}) {
                     background,
                 });
 
-            if (isBigWin(scores)) {
-                await boardEffect.bigwin.show();
-
-                await bigwin.play(scores);
-            }
+            if (isBigWin(scores)) await playBigWin();
 
             app.user.cash += scores;
         }
@@ -79,6 +73,14 @@ export function logic({slot, effects, background}) {
 
         log('Round Complete...');
         app.emit('Idle');
+    }
+
+    async function playBigWin(scores) {
+        await boardEffect.bigwin.show();
+
+        await bigwin.play(scores);
+
+        if (normalBoard.alpha !== 1) await normalBoard.show();
     }
 }
 

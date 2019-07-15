@@ -1,9 +1,13 @@
 import {addPackage} from 'pixi_fairygui';
 
-import {Background, SlotMachine, Waters} from './components';
+import {Background, Light, SlotMachine, Waters} from './components';
 
 import {logic} from './logic';
-import {fadeIn, fadeOut, twink} from './effect';
+import {fadeIn, fadeOut} from './effect';
+
+import {extras} from 'pixi.js';
+
+const {BitmapText} = extras;
 
 export function create({normalTable}) {
     const create = addPackage(app, 'main');
@@ -27,14 +31,38 @@ export function create({normalTable}) {
         );
 
         app.on('RespinStart', () => {
-            const targets = select('shadow');
+            const targets = select('shadow@respin');
 
             fadeIn({targets, alpha: 0.7});
 
             app.once('Idle', () => fadeOut({targets}));
         });
 
-        window.background = background;
+        app.on('ShowResult', async ({scores}) => {
+            const targets = select('shadow@normal');
+
+            await fadeIn({targets, alpha: 0.7}).finished;
+
+            const style = {font: '30px Score'};
+            const score = new BitmapText(`${scores}`, style);
+
+            score.anchor.set(.5);
+
+            const {x, y} = select('pos@score');
+            score.position.set(x, y);
+
+            const timer =
+                setInterval(() =>
+                    score.visible = !score.visible, 1000);
+
+            scene.addChild(score);
+
+            app.once('SpinStart', async () => {
+                await fadeOut({targets}).finished;
+                clearInterval(timer);
+                scene.removeChild(score);
+            });
+        });
 
         const lights =
             scene.children
@@ -52,6 +80,34 @@ export function create({normalTable}) {
             background,
         });
 
+        app.on('ReelStop', () => {
+            app.sound.play('Reel_Stop_1');
+            app.sound.play('Reel_Stop_2');
+        });
+
+        app.on('ShowResult', ({symbols}) => {
+            const includeJackpot =
+                ['1', '2', '3'].includes(symbols[1]);
+
+            const firstReelWild =
+                symbols[0] === '00';
+            const thirdReelWild =
+                symbols[2] === '02';
+
+            const sound =
+                (includeJackpot) ? 'Jackpot_Connect' :
+                    (firstReelWild || thirdReelWild) ? 'Wild_Connect' :
+                        'Normal_Connect';
+            app.sound.play(sound);
+        });
+
+        app.alert.request({title: translate(`common:message.audio`)})
+            .then(({value}) => {
+                app.sound.mute(!value);
+
+                app.sound.play('Normal_BGM');
+            });
+
         return scene;
 
         function onMaybeBonus(reel) {
@@ -60,7 +116,10 @@ export function create({normalTable}) {
 
             lights[current].off();
 
-            if (next < lights.length) lights[next].show();
+            if (next < lights.length) {
+                app.sound.play('Maybe_Bonus');
+                lights[next].show();
+            }
         }
     }
 
@@ -71,19 +130,4 @@ export function create({normalTable}) {
 
 function id({name}) {
     return Number(name.split('@')[1]);
-}
-
-function Light(view) {
-    let twinkling = false;
-
-    return {show, off};
-
-    async function show() {
-        twinkling = true;
-        while (twinkling) await twink({targets: view, interval: 500});
-    }
-
-    function off() {
-        twinkling = false;
-    }
 }
