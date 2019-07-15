@@ -43,7 +43,7 @@ export function logic({slot, effects, background}) {
 
         app.user.lastWin = scores;
 
-        if (!result.isJackpot && isBigWin(scores)) await playBigWin();
+        if (!result.isJackpot && isBigWin(scores)) await playBigWin(scores);
 
         app.user.cash += scores;
 
@@ -64,7 +64,7 @@ export function logic({slot, effects, background}) {
                     background,
                 });
 
-            if (isBigWin(scores)) await playBigWin();
+            if (isBigWin(scores)) await playBigWin(scores);
 
             app.user.cash += scores;
         }

@@ -48,14 +48,14 @@ export function create({normalTable}) {
 
             score.anchor.set(.5);
 
-            const {x, y} = select('pos@score');
-            score.position.set(x, y);
+            const pos = select('pos@score');
+            score.position.set(pos.x, pos.y);
 
             const timer =
                 setInterval(() =>
                     score.visible = !score.visible, 1000);
 
-            scene.addChild(score);
+            scene.addChildAt(score, scene.getChildIndex(pos));
 
             app.once('SpinStart', async () => {
                 await fadeOut({targets}).finished;

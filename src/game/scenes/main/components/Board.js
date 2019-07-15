@@ -1,4 +1,5 @@
 import {extras} from 'pixi.js';
+
 const {BitmapText} = extras;
 
 import {currencyFormat, wait} from '../../../../general';
@@ -62,23 +63,23 @@ export function Normal(view) {
                 symbols[1] === symbols[2];
             const firstSecondSame =
                 symbols[0] === symbols[1];
-            const firstThirdSame =
-                symbols[0] === symbols[2];
 
             let name = 'any';
 
-            if (
-                (includeJackpot && bothReelWild) ||
-                (firstReelWild && secondThirdSame)
-            ) {
+
+            if (includeJackpot && bothReelWild) {
                 name = table[symbols[1]];
-            }
-            if (
+                //
+            } else if (
+                includeJackpot ||
                 allSame ||
-                (includeJackpot && firstThirdSame) ||
-                (thirdReelWild && firstSecondSame)
+                thirdReelWild && firstSecondSame
             ) {
                 name = table[symbols[0]];
+                //
+            } else if (firstReelWild && secondThirdSame) {
+                name = table[symbols[1]];
+                //
             }
 
             const box = view.getChildByName(`box@${name}`);

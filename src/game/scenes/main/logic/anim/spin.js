@@ -3,6 +3,7 @@ import {wait} from '../../../../../general';
 import {
     MAYBE_BONUS_DURATION,
     SPIN_STOP_INTERVAL,
+    SPIN_DURATION,
     symbolConfig,
 } from '../../data';
 
@@ -24,7 +25,7 @@ export async function spin({reels, symbols, func}) {
 async function duration() {
     app.emit('SpinDuration');
 
-    let time = 2000;
+    let time = SPIN_DURATION[app.user.speed];
 
     app.on('QuickStop', () => time = 0);
 

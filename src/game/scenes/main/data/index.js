@@ -23,8 +23,9 @@ export function reserve() {
 
 const stopPerSymbol = 2;
 
-const SPIN_STOP_INTERVAL = 250;
 const MAYBE_BONUS_DURATION = 1000;
+const SPIN_DURATION = [2500, 2000, 1500];
+const SPIN_STOP_INTERVAL = 250;
 
 export {
     stopPerSymbol,
@@ -33,5 +34,6 @@ export {
 
     SPIN_STOP_INTERVAL,
     MAYBE_BONUS_DURATION,
+    SPIN_DURATION,
 };
 

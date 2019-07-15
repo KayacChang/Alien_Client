@@ -1,8 +1,8 @@
 import anime from 'animejs';
 
 export function Waters(scene) {
-    const waterStage = [0.5, 1, 1.4];
-    const splashY = [700, 580, 460];
+    const waterStage = [1, 2, 2.8];
+    const splashY = [710, 580, 450];
 
     const waters = [];
     const splashs = [];
