@@ -5,7 +5,7 @@ import ALERT from './sounds/alert01.mp3';
 import SUCCESS from './sounds/success01.mp3';
 
 
-export default function(app) {
+export default function() {
     const defaultStyle = {
         background: '#212121',
         confirmButtonText: translate(`common:button.confirm`),
@@ -38,13 +38,30 @@ export default function(app) {
             .then(() => history.back());
     }
 
-    function request({title}) {
+    function reload(msg) {
+        const config = {
+            ...defaultStyle,
+
+            type: 'error',
+            text: translate(`common:error.connection`),
+            confirmButtonText: translate(`common:button.refresh`),
+            confirmButtonColor: '#DC3446',
+
+            ...(msg),
+        };
+
+        return Swal.fire(config)
+            .then(() => location.reload());
+    }
+
+    function request(data) {
         const config = {
             ...defaultStyle,
 
             type: 'warning',
-            title,
             showCancelButton: true,
+
+            ...(data),
         };
 
         playAudio(ALERT);
@@ -165,7 +182,7 @@ export default function(app) {
     }
 
     return {
-        error, leave, loading, close,
+        error, leave, loading, close, reload,
         success, checkoutList, request,
     };
 }

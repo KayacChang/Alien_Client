@@ -16,16 +16,32 @@ export function Network() {
         timeout: 10000,
     });
 
-    function fetchData(promise) {
-        return promise.then(({data}) => data);
+    async function get(url) {
+        try {
+            const {data} = await proxy.get(url);
+
+            return data;
+        } catch (err) {
+            handleError(err);
+        }
     }
 
-    function get(url) {
-        return fetchData(proxy.get(url));
+    async function post(url, payload) {
+        try {
+            const {data} = await proxy.post(url, payload);
+
+            return data;
+        } catch (err) {
+            handleError(err);
+        }
     }
 
-    function post(url, payload) {
-        return fetchData(proxy.post(url, payload));
+    function handleError(err) {
+        if (err.message === 'Network Error') {
+            return app.alert.reload(err.message);
+        }
+
+        return app.alert.error(err.message);
     }
 
     return {get, post};
