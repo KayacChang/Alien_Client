@@ -82,11 +82,14 @@ export function Normal(view) {
                 //
             }
 
-            const box = view.getChildByName(`box@${name}`);
+            const targets = view.getChildByName(`box@${name}`);
 
-            await fadeIn({targets: box});
+            targets.children
+                .forEach((child) => child.alpha = 1);
 
-            app.once('SpinStart', () => fadeOut({targets: box}));
+            await fadeIn({targets}).finished;
+
+            app.once('SpinStart', () => fadeOut({targets}));
         });
 
         view.alpha = 0;

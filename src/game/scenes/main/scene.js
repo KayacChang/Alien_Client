@@ -3,10 +3,9 @@ import {addPackage} from 'pixi_fairygui';
 import {Background, Light, SlotMachine, Waters} from './components';
 
 import {logic} from './logic';
-import {fadeIn, fadeOut} from './effect';
+import {fadeIn, fadeOut, moveIn, moveOut, popIn} from './effect';
 
 import {extras} from 'pixi.js';
-
 const {BitmapText} = extras;
 
 export function create({normalTable}) {
@@ -30,7 +29,20 @@ export function create({normalTable}) {
             select('background'),
         );
 
+        const style = {font: '36px Score'};
+        const score = new BitmapText('0', style);
+
         app.on('RespinStart', () => {
+            const normal = select('shadow@normal');
+
+            if (scene.children.includes(score)) {
+                fadeOut({targets: score});
+                moveOut({targets: score, y: '-=' + 30});
+                scene.removeChild(score);
+            }
+
+            fadeOut({targets: normal});
+
             const targets = select('shadow@respin');
 
             fadeIn({targets, alpha: 0.7});
@@ -43,23 +55,33 @@ export function create({normalTable}) {
 
             await fadeIn({targets, alpha: 0.7}).finished;
 
-            const style = {font: '30px Score'};
-            const score = new BitmapText(`${scores}`, style);
-
+            score.text = scores;
             score.anchor.set(.5);
 
-            const pos = select('pos@score');
-            score.position.set(pos.x, pos.y);
+            const start = select('pos_start@score');
+            const end = select('pos_end@score');
 
-            const timer =
-                setInterval(() =>
-                    score.visible = !score.visible, 1000);
+            score.position.set(start.x, start.y);
+            scene.addChildAt(score, scene.getChildIndex(start));
 
-            scene.addChildAt(score, scene.getChildIndex(pos));
+            fadeIn({targets: score});
+            moveIn({targets: score, y: end.y});
+            popIn({targets: score});
 
             app.once('SpinStart', async () => {
+                const duration = 500;
+                fadeOut({
+                    targets: score,
+                    easing: 'easeOutQuart',
+                    duration,
+                });
+                moveOut({
+                    targets: score,
+                    y: '-=' + 100,
+                    duration,
+                });
+
                 await fadeOut({targets}).finished;
-                clearInterval(timer);
                 scene.removeChild(score);
             });
         });

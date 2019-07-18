@@ -38,6 +38,9 @@ import BIGWIN_MP3 from '../assets/sound/mp3/BigWin.mp3';
 import BIGWIN_OGG from '../assets/sound/ogg/BigWin.ogg';
 import BIGWIN_WEBM from '../assets/sound/webm/BigWin.webm';
 
+import ATTRACTION_MP3 from '../assets/sound/mp3/Attraction.mp3';
+import ATTRACTION_OGG from '../assets/sound/ogg/Attraction.ogg';
+import ATTRACTION_WEBM from '../assets/sound/webm/Attraction.webm';
 
 export const sounds = [
     {
@@ -126,6 +129,17 @@ export const sounds = [
             ELECTRON_WEBM,
             ELECTRON_OGG,
             ELECTRON_MP3,
+        ],
+    },
+
+    {
+        type: 'sound',
+        subType: 'effects',
+        name: 'Attraction',
+        src: [
+            ATTRACTION_WEBM,
+            ATTRACTION_OGG,
+            ATTRACTION_MP3,
         ],
     },
 

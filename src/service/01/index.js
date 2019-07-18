@@ -36,7 +36,7 @@ export function Service(prodKey) {
     };
 
     return {
-        login, init, refresh, exchange, checkout, sendOneRound,
+        login, init, refresh, exchange, checkout, sendOneRound, sendOneTest,
 
         get currencies() {
             return currencies;
@@ -155,15 +155,16 @@ export function Service(prodKey) {
                         currencies.get(type).rate = rate;
                     });
 
-                // const now = data['serversetting']['servertime'] * 1000;
-                // const maintain =
-                // data['serversetting']['maintaintime'] * 1000;
-                //
-                // time.now = new Date(now);
-                // time.warning = new Date(maintain - (10 * 60 * 1000));
-                // time.maintain = new Date(maintain);
-                //
-                // time.timer = setInterval(checkTime, 1000);
+                const now =
+                    data['serversetting']['servertime'] * 1000;
+                const maintain =
+                    data['serversetting']['maintaintime'] * 1000;
+
+                time.now = new Date(now);
+                time.warning = new Date(maintain - (10 * 60 * 1000));
+                time.maintain = new Date(maintain);
+
+                time.timer = setInterval(checkTime, 1000);
 
                 return data;
             });
@@ -300,6 +301,19 @@ export function Service(prodKey) {
         };
 
         return request('game/gameresult', requestBody)
+            .then(handle);
+    }
+
+    function sendOneTest({bet}) {
+        const requestBody = {
+            'type': 'gameResult',
+            'playerid': app.user.id,
+            ...tokens,
+            ...env,
+            bet,
+        };
+
+        return request('game/testresult', requestBody)
             .then(handle);
     }
 

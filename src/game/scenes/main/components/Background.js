@@ -156,9 +156,11 @@ export function Background(view) {
         electron.visible = true;
         charging = true;
 
-        while (charging) await shake({targets: electron, amplitude});
+        app.sound.play('Electron');
+        app.sound.play('Attraction');
+
         while (charging) {
-            app.sound.play('Electron');
+            shake({targets: electron, amplitude});
             await wait(4000);
         }
     }

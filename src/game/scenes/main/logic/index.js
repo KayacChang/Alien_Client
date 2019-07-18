@@ -15,6 +15,12 @@ export function logic({slot, effects, background}) {
         bigwin, boardEffect, normalBoard,
     } = background;
 
+    global.test = function() {
+        app.service
+            .sendOneTest({bet: 1})
+            .then((result) => app.emit('GameResult', result));
+    };
+
     async function onGameResult(result) {
         log('onGameResult =============');
         table(result);
