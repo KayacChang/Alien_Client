@@ -1,4 +1,4 @@
-import {log, table, divide} from '../../../../general';
+import {log, table, divide, isProduction} from '../../../../general';
 
 import {NormalGame, ReSpinGame} from './flow';
 
@@ -15,11 +15,13 @@ export function logic({slot, effects, background}) {
         bigwin, boardEffect, normalBoard,
     } = background;
 
-    global.test = function() {
-        app.service
-            .sendOneTest({bet: 1})
-            .then((result) => app.emit('GameResult', result));
-    };
+    if (!isProduction()) {
+        global.test = function() {
+            app.service
+                .sendOneTest({bet: 1})
+                .then((result) => app.emit('GameResult', result));
+        };
+    }
 
     async function onGameResult(result) {
         log('onGameResult =============');
