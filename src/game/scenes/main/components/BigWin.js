@@ -26,18 +26,17 @@ export function BigWin(view) {
 
         const {alpha} = app.control.main;
 
-        await fadeOut({targets: app.control.main}).finished;
+        fadeOut({targets: app.control.main});
 
         view.transition['anim'].restart();
 
-        app.sound.mute(true, 'Normal_BGM');
-        app.sound.play('Big_Win');
-
-        await wait(250);
-
+        await wait(100);
         view.visible = true;
 
-        await wait(1500);
+        await wait(1800);
+
+        app.sound.mute(true, 'Normal_BGM');
+        app.sound.play('Big_Win');
 
         mount();
 

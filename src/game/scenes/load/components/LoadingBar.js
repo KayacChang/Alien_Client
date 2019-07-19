@@ -3,6 +3,8 @@ import {divide} from '../../../../general';
 export function LoadingBar(view) {
     const mask = view.getChildByName('mask');
 
+    update(1);
+
     return {
         get width() {
             return mask.width;

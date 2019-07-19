@@ -101,13 +101,14 @@ export function Background(view) {
 
             await Show.finished;
 
-            await hide();
+            hide();
         }
 
         async function hide() {
             Hide.restart();
 
             await Hide.finished;
+            app.sound.stop('Electron');
 
             boardEffect.visible = false;
         }
@@ -142,6 +143,8 @@ export function Background(view) {
         shaking = false;
         charging = false;
         electron.visible = false;
+
+        app.sound.stop('Electron');
     }
 
     async function startShaking(amplitude = 3) {
@@ -156,10 +159,10 @@ export function Background(view) {
         electron.visible = true;
         charging = true;
 
-        app.sound.play('Electron');
         app.sound.play('Attraction');
 
         while (charging) {
+            app.sound.play('Electron');
             shake({targets: electron, amplitude});
             await wait(4000);
         }
