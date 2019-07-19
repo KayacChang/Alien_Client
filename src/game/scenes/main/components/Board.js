@@ -84,9 +84,6 @@ export function Normal(view) {
 
             const targets = view.getChildByName(`box@${name}`);
 
-            targets.children
-                .forEach((child) => child.alpha = 1);
-
             await fadeIn({targets}).finished;
 
             app.once('SpinStart', () => fadeOut({targets}));
