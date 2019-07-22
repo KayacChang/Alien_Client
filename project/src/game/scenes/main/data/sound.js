@@ -42,6 +42,34 @@ import ATTRACTION_MP3 from '../assets/sound/mp3/Attraction.mp3';
 import ATTRACTION_OGG from '../assets/sound/ogg/Attraction.ogg';
 import ATTRACTION_WEBM from '../assets/sound/webm/Attraction.webm';
 
+import ALIEN_EFFECT_MP3 from
+    '../assets/sound/mp3/Alien_effect.mp3';
+import ALIEN_EFFECT_OGG from
+    '../assets/sound/ogg/Alien_effect.ogg';
+import ALIEN_EFFECT_WEBM from
+    '../assets/sound/webm/Alien_effect.webm';
+
+import ALIEN_EXPRESSION_01_MP3 from
+    '../assets/sound/mp3/Alien_expression_01.mp3';
+import ALIEN_EXPRESSION_01_OGG from
+    '../assets/sound/ogg/Alien_expression_01.ogg';
+import ALIEN_EXPRESSION_01_WEBM from
+    '../assets/sound/webm/Alien_expression_01.webm';
+
+import ALIEN_EXPRESSION_02_MP3 from
+    '../assets/sound/mp3/Alien_expression_02.mp3';
+import ALIEN_EXPRESSION_02_OGG from
+    '../assets/sound/ogg/Alien_expression_02.ogg';
+import ALIEN_EXPRESSION_02_WEBM from
+    '../assets/sound/webm/Alien_expression_02.webm';
+
+import ALIEN_EXPRESSION_03_MP3 from
+    '../assets/sound/mp3/Alien_expression_03.mp3';
+import ALIEN_EXPRESSION_03_OGG from
+    '../assets/sound/ogg/Alien_expression_03.ogg';
+import ALIEN_EXPRESSION_03_WEBM from
+    '../assets/sound/webm/Alien_expression_03.webm';
+
 export const sounds = [
     {
         type: 'sound',
@@ -88,16 +116,6 @@ export const sounds = [
         ],
     },
 
-    {
-        type: 'sound',
-        subType: 'effects',
-        name: 'Wild_Connect',
-        src: [
-            WILD_CONNECT_WEBM,
-            WILD_CONNECT_OGG,
-            WILD_CONNECT_MP3,
-        ],
-    },
 
     {
         type: 'sound',
@@ -162,6 +180,61 @@ export const sounds = [
             BIGWIN_WEBM,
             BIGWIN_OGG,
             BIGWIN_MP3,
+        ],
+    },
+
+    {
+        type: 'sound',
+        subType: 'effects',
+        name: 'Alien_0',
+        src: [
+            WILD_CONNECT_WEBM,
+            WILD_CONNECT_OGG,
+            WILD_CONNECT_MP3,
+        ],
+    },
+
+    {
+        type: 'sound',
+        subType: 'effects',
+        name: 'Magnet',
+        src: [
+            ALIEN_EFFECT_WEBM,
+            ALIEN_EFFECT_OGG,
+            ALIEN_EFFECT_MP3,
+        ],
+    },
+
+    {
+        type: 'sound',
+        subType: 'effects',
+        name: 'Alien_1',
+        src: [
+            ALIEN_EXPRESSION_01_WEBM,
+            ALIEN_EXPRESSION_01_OGG,
+            ALIEN_EXPRESSION_01_MP3,
+        ],
+    },
+
+    {
+        type: 'sound',
+        subType: 'effects',
+        name: 'Alien_2',
+        src: [
+            ALIEN_EXPRESSION_02_WEBM,
+            ALIEN_EXPRESSION_02_OGG,
+            ALIEN_EXPRESSION_02_MP3,
+        ],
+    },
+
+    {
+        type: 'sound',
+        subType: 'effects',
+        name: 'Alien_3',
+        src: [
+            ALIEN_EXPRESSION_03_WEBM,
+            ALIEN_EXPRESSION_03_OGG,
+            ALIEN_EXPRESSION_03_MP3,
         ],
     },
 ];

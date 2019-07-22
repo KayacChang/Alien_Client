@@ -7,6 +7,8 @@ export async function show(effects, result) {
 
     const {symbols} = result;
 
+    let sound = undefined;
+
     symbols.forEach((id, index) => {
         const effect = effects[index];
 
@@ -14,12 +16,23 @@ export async function show(effects, result) {
 
         if (name === 'empty') return;
 
-        return (
-            (name.includes('wild')) ? wild :
-                (name.includes('alien')) ? alien :
-                    normal
-        )(effect, name);
+        if (name.includes('wild')) {
+            sound = wild(effect, name);
+            //
+        } else if (name.includes('alien')) {
+            const _sound = alien(effect, name);
+
+            if (sound !== 'Jackpot_Connect') sound = _sound;
+            //
+        } else {
+            const _sound = normal(effect, name);
+
+            sound = sound || _sound;
+            //
+        }
     });
+
+    if (sound) app.sound.play(sound);
 
     await wait(2000);
 }
@@ -38,6 +51,8 @@ function normal(effect, name) {
     animation.loop = true;
 
     play(target, animation);
+
+    return 'Normal_Connect';
 }
 
 function wild(effect, name) {
@@ -51,6 +66,8 @@ function wild(effect, name) {
         .forEach((view) => view.visible = false);
 
     play(target, animation);
+
+    return 'Jackpot_Connect';
 }
 
 function alien(effect, name) {
@@ -60,7 +77,9 @@ function alien(effect, name) {
 
     const alien = target.getChildByName('alien');
 
-    const expression = alien.transition[randomInt(4)];
+    const type = randomInt(4);
+
+    const expression = alien.transition[type];
 
     expression.loop = true;
     animation.loop = true;
@@ -73,6 +92,8 @@ function alien(effect, name) {
         expression.loop = undefined;
         expression.pause();
     });
+
+    return `Alien_${type}`;
 }
 
 function play(target, anim) {

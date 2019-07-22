@@ -83,9 +83,8 @@ export function Setting(menu) {
         .content.text = kCurrencyFormat(app.user.betOptions[0]);
     setting
         .getChildByName(`label@betLevel_max`)
-        .content.text =
-        kCurrencyFormat(
-            app.user.betOptions[app.user.betOptions.length - 1],
+        .content.text = kCurrencyFormat(
+            app.user.betOptions[app.user.betOptions.length - 1]
         );
 
     setting.y -= 53;

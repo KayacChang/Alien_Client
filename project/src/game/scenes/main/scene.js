@@ -102,27 +102,6 @@ export function create({normalTable}) {
             background,
         });
 
-        app.on('ReelStop', () => {
-            app.sound.play('Reel_Stop_1');
-            app.sound.play('Reel_Stop_2');
-        });
-
-        app.on('ShowResult', ({symbols}) => {
-            const includeJackpot =
-                ['1', '2', '3'].includes(symbols[1]);
-
-            const firstReelWild =
-                symbols[0] === '00';
-            const thirdReelWild =
-                symbols[2] === '02';
-
-            const sound =
-                (includeJackpot) ? 'Jackpot_Connect' :
-                    (firstReelWild || thirdReelWild) ? 'Wild_Connect' :
-                        'Normal_Connect';
-            app.sound.play(sound);
-        });
-
         app.alert.request({title: translate(`common:message.audio`)})
             .then(({value}) => {
                 app.sound.mute(!value);

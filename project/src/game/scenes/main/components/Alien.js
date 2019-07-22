@@ -23,6 +23,7 @@ export function Alien(view) {
     function showMagnet() {
         const anim = view.transition['ShowMagnet'];
 
+        app.sound.play('Magnet');
         anim.restart();
 
         return anim.finished;
@@ -31,6 +32,7 @@ export function Alien(view) {
     function hideMagnet() {
         const anim = view.transition['HideMagnet'];
 
+        app.sound.play('Magnet');
         anim.restart();
 
         return anim.finished;

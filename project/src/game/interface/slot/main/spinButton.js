@@ -136,55 +136,60 @@ export function SpinButton(view) {
 
     function checkState() {
         if (cashLessThanBet()) {
-            checkButton();
             if (!whenAnim) {
                 whenAnim = true;
                 view.openMenu('exchange')
                     .then(() => whenAnim = false);
             }
+
+            return spinEnd();
         }
 
         if (it.auto.get() > 0 && isAuto && isRunning) {
             isRunning = false;
             play();
-            it.auto.set(it.auto.get() - 1);
         } else {
-            anime.remove(arrow);
-
-            anime({
-                targets: square.scale,
-                x: 0, y: 0,
-            });
-
-            anime({
-                targets: arrow.scale,
-                x: arrowScale.x,
-                y: arrowScale.y,
-            });
-
-            anime({
-                targets: arrow,
-                rotation: 0,
-                alpha: 1,
-            });
-
-            anime({
-                targets: view,
-                alpha: 1,
-                easing: 'easeOutCubic',
-                duration: 1000,
-
-                complete() {
-                    view.menuBtn.interactive = true;
-                    view.option.btn.interactive = true;
-
-                    isRunning = false;
-                    isQuickStop = false;
-
-                    app.user.speed = speed;
-                },
-            });
+            spinEnd();
         }
+    }
+
+    function spinEnd() {
+        anime.remove(arrow);
+
+        anime({
+            targets: square.scale,
+            x: 0, y: 0,
+        });
+
+        anime({
+            targets: arrow.scale,
+            x: arrowScale.x,
+            y: arrowScale.y,
+        });
+
+        anime({
+            targets: arrow,
+            rotation: '-=' + arrow.rotation % (2 * pi),
+            alpha: 1,
+        });
+
+        anime({
+            targets: view,
+            alpha: 1,
+            easing: 'easeOutCubic',
+        });
+
+        requestAnimationFrame(() => {
+            view.menuBtn.interactive = true;
+            view.option.btn.interactive = true;
+
+            isRunning = false;
+            isQuickStop = false;
+
+            app.user.speed = speed;
+
+            checkButton();
+        });
     }
 
     function cashLessThanBet() {
@@ -194,6 +199,8 @@ export function SpinButton(view) {
     function onClick() {
         if (whenAnim) return;
         if (isBlocking) {
+            if (isRunning) return;
+
             whenAnim = true;
             anime({
                 targets: msg,
@@ -297,6 +304,10 @@ export function SpinButton(view) {
         view.option.btn.interactive = false;
 
         isRunning = true;
+
+        if (auto.get() > 0) {
+            auto.set(auto.get() - 1);
+        }
 
         const key = process.env.KEY;
 

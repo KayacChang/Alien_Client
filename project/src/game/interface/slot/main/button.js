@@ -11,7 +11,6 @@ export function setBehaviour(it) {
         easing: 'easeOutCubic',
     };
     const normal = {
-
         hoverMask: {
             alpha: 0,
         },
@@ -44,7 +43,6 @@ export function setBehaviour(it) {
 
     function onNormal() {
         if (isMobile.phone) return;
-
         anime({
             targets: hoverMaskView,
             ...(anim),

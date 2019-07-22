@@ -59,26 +59,31 @@ export function Normal(view) {
 
             const allSame =
                 symbols.every((symbol) => symbols[0] === symbol);
-            const secondThirdSame =
-                symbols[1] === symbols[2];
-            const firstSecondSame =
-                symbols[0] === symbols[1];
+            const firstThirdSame =
+                symbols[0] === symbols[2];
 
             let name = 'any';
 
-
-            if (includeJackpot && bothReelWild) {
+            if (includeJackpot) {
+                //
+                if (bothReelWild) {
+                    name = table[symbols[1]];
+                    //
+                } else if (firstReelWild) {
+                    name = table[symbols[2]];
+                    //
+                } else if (thirdReelWild) {
+                    name = table[symbols[0]];
+                    //
+                } else if (firstThirdSame) {
+                    name = table[symbols[0]];
+                    //
+                }
+            } else if (firstReelWild) {
                 name = table[symbols[1]];
                 //
-            } else if (
-                includeJackpot ||
-                allSame ||
-                thirdReelWild && firstSecondSame
-            ) {
+            } else if (thirdReelWild || allSame) {
                 name = table[symbols[0]];
-                //
-            } else if (firstReelWild && secondThirdSame) {
-                name = table[symbols[1]];
                 //
             }
 

@@ -2,8 +2,8 @@ import anime from 'animejs';
 import {wait} from '../../../../../general';
 import {
     MAYBE_BONUS_DURATION,
-    SPIN_STOP_INTERVAL,
-    SPIN_DURATION,
+    getSpinStopInterval,
+    getSpinDuration,
     symbolConfig,
 } from '../../data';
 
@@ -25,7 +25,7 @@ export async function spin({reels, symbols, func}) {
 async function duration() {
     app.emit('SpinDuration');
 
-    let time = SPIN_DURATION[app.user.speed];
+    let time = getSpinDuration();
 
     app.on('QuickStop', () => time = 0);
 
@@ -66,6 +66,9 @@ async function stop(reels, icons, func) {
 
     let isMaybeBonus = false;
 
+    let interval = getSpinStopInterval();
+    app.on('QuickStop', () => interval = 0);
+
     for (const reel of reels) {
         const index = reel.index;
 
@@ -100,13 +103,16 @@ async function stop(reels, icons, func) {
 
                 begin() {
                     app.emit('ReelStop', reel);
+
+                    app.sound.play('Reel_Stop_1');
+                    app.sound.play('Reel_Stop_2');
                 },
             })
                 .finished;
 
         stops.push(stop);
 
-        await wait(SPIN_STOP_INTERVAL);
+        await wait(interval);
 
         if (isMaybeBonus) app.emit('MaybeBonus', reel);
     }
