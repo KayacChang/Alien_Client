@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/egg734631/Slot_Interface.git
 	branch = master
-	commit = 0fc2ed7db0374d9b48f5e2a0bf9861f378eb1960
-	parent = ede6dc3ff79fc4e6528aa1396529ba98cf89a213
+	commit = d5e4176fd6d1dbc77d45804497c2a863b53b1ee6
+	parent = 6d3a3595831f2686bb8b8ece944970f4dec4f752
 	method = merge
 	cmdver = 0.4.0
