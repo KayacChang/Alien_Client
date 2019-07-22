@@ -3,7 +3,7 @@ import {Container, Text} from 'pixi.js';
 import anime from 'animejs';
 import {setBehaviour} from './button';
 
-import {pi, clone, wait} from '../../../../general';
+import {pi, clone} from '../../../general';
 
 const {assign} = Object;
 
@@ -11,6 +11,11 @@ export function SpinButton(view) {
     let it = Clickable(
         view.getChildByName('spin'),
     );
+
+    it.originScale = {
+        x: it.scale.x,
+        y: it.scale.y,
+    };
 
     const img = it.getChildByName('frame');
 
@@ -60,11 +65,11 @@ export function SpinButton(view) {
 
     countField.anchor.set(.5);
 
-    countField.pivot
-        .set(countField.width / 2, countField.height / 2);
-
     countField.position
-        .set(it.width / 2, it.height / 2);
+        .set(
+            it.getChildByName('down').x,
+            it.getChildByName('down').y
+        );
 
     const auto = {
         get() {
@@ -164,7 +169,7 @@ export function SpinButton(view) {
 
         anime({
             targets: arrow,
-            rotation: 0,
+            rotation: '-=' + arrow.rotation % (2 * pi),
             alpha: 1,
         });
 
@@ -253,8 +258,8 @@ export function SpinButton(view) {
 
         anime({
             targets: it.scale,
-            x: 1,
-            y: 1,
+            x: it.originScale.x,
+            y: it.originScale.y,
             easing: 'easeOutElastic(1, .5)',
             duration: 300,
         });
