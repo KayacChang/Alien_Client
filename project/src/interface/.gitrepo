@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/egg734631/Slot_Interface.git
+	branch = master
+	commit = 2e9ca947c8bdffd5a3d922bc68bdd814effa2878
+	parent = 785b1a8407401e581ca74b75843ef989284eec41
+	method = merge
+	cmdver = 0.4.0
