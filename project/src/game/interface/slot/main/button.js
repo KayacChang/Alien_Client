@@ -1,6 +1,6 @@
 import anime from 'animejs';
 
-import {isMobile} from '../../../../general';
+import {isMobile} from 'pixi.js/lib/core/utils';
 
 export function setBehaviour(it) {
     const hoverMaskView = it.getChildByName('hover');
