@@ -2,7 +2,7 @@ import {Openable} from '../../components/Openable';
 import {Clickable, ToggleButton, RangeSlider} from '../../components';
 
 import anime from 'animejs';
-import {kFormat, kCurrencyFormat, rgbToHex} from '../../../../general';
+import {kFormat, kCurrencyFormat, rgbToHex} from '../../../general';
 
 export function Setting(menu) {
     const setting = Openable(
@@ -84,9 +84,7 @@ export function Setting(menu) {
     setting
         .getChildByName(`label@betLevel_max`)
         .content.text = kCurrencyFormat(
-            app.user.betOptions[
-                app.user.betOptions.length - 1
-            ]
+            app.user.betOptions[app.user.betOptions.length - 1]
         );
 
     setting.y -= 53;
