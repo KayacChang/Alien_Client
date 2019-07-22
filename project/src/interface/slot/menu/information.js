@@ -140,10 +140,6 @@ export function Information(menu) {
             },
         };
 
-        function Idx({name}) {
-            return name.split('@')[1];
-        }
-
         function setControl(flag) {
             if (flag) {
                 it

@@ -56,7 +56,7 @@ async function main() {
         const [MainScene, UserInterface, initData] =
             await Promise.all([
                 import('./game/scenes/main'),
-                import('./game/interface/slot'),
+                import('./interface/slot'),
                 app.service.init({key}),
             ]);
 

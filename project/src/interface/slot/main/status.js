@@ -3,7 +3,7 @@ import {
     currencyFormat,
     toValue,
     signFormat,
-} from '../../../../general';
+} from '../../../general';
 import anime from 'animejs';
 
 export function Status(view) {

@@ -1,4 +1,4 @@
-import {currencyFormat} from '../../../../general';
+import {currencyFormat} from '../../../general';
 import {SpinButton} from './spinButton';
 import {Options} from './option';
 import {Status} from './status';

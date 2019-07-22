@@ -4,7 +4,7 @@ import {ToggleButton, Clickable, Openable} from '../../components';
 
 import {
     currencyFormat, log10,
-} from '../../../../general';
+} from '../../../general';
 
 const key = process.env.KEY;
 
