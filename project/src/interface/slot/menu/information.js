@@ -1,17 +1,17 @@
 import {Clickable, Openable} from '../../components';
 import anime from 'animejs';
 
-import {abs, sign} from '../../../../general';
-
-import RULE_0_URL from '../../../rule/gameRule0.png';
-import RULE_1_URL from '../../../rule/gameRule1.png';
-import RULE_2_URL from '../../../rule/gameRule2.png';
-import RULE_3_URL from '../../../rule/gameRule3.png';
-import RULE_4_URL from '../../../rule/gameRule4.png';
-import RULE_5_URL from '../../../rule/gameRule5.png';
-import RULE_6_URL from '../../../rule/gameRule6.png';
+import RULE_0_URL from '../assets/rules/gamerule0.png';
+import RULE_1_URL from '../assets/rules/gamerule1.png';
+import RULE_2_URL from '../assets/rules/gamerule2.png';
+import RULE_3_URL from '../assets/rules/gamerule3.png';
+import RULE_4_URL from '../assets/rules/gamerule4.png';
+import RULE_5_URL from '../assets/rules/gamerule5.png';
+import RULE_6_URL from '../assets/rules/gamerule6.png';
 
 import {Sprite} from 'pixi.js';
+
+const {abs, sign} = Math;
 
 export function Information(menu) {
     const information = Openable(

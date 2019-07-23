@@ -2,7 +2,7 @@ import {Clickable, Openable} from '../../components';
 import {Exchange} from './exchange';
 import {Setting} from './setting';
 import anime from 'animejs';
-// import {Information} from './information';
+import {Information} from './information';
 
 const {entries} = Object;
 
@@ -37,12 +37,12 @@ export function Menu(parent) {
 
     const exchange = Exchange(menu);
     const setting = Setting(menu);
-    // const information = Information(menu);
+    const information = Information(menu);
 
     const sections =
         new Map(entries({
             exchange, setting,
-            // information,
+            information,
         }));
     sections.forEach((section) => section.alpha = 0);
 
@@ -59,7 +59,7 @@ export function Menu(parent) {
 
     menu.exchange = exchange;
     menu.setting = setting;
-    // menu.information = information;
+    menu.information = information;
 
     return menu;
 
