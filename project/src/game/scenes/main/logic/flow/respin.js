@@ -95,6 +95,8 @@ async function onReSpinStart(background) {
         showAlien,
     } = background;
 
+    app.user.lastWin = 0;
+
     await boardEffect.respin.show();
 
     await Promise.all([
