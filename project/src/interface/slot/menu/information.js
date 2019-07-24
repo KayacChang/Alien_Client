@@ -1,13 +1,13 @@
 import {Clickable, Openable} from '../../components';
 import anime from 'animejs';
 
-import RULE_0_URL from '../../../game/interface/rules/gamerule0.png';
-import RULE_1_URL from '../../../game/interface/rules/gamerule1.png';
-import RULE_2_URL from '../../../game/interface/rules/gamerule2.png';
-import RULE_3_URL from '../../../game/interface/rules/gamerule3.png';
-import RULE_4_URL from '../../../game/interface/rules/gamerule4.png';
-import RULE_5_URL from '../../../game/interface/rules/gamerule5.png';
-import RULE_6_URL from '../../../game/interface/rules/gamerule6.png';
+import RULE_0_URL from '../assets/rules/gamerule0.png';
+import RULE_1_URL from '../assets/rules/gamerule1.png';
+import RULE_2_URL from '../assets/rules/gamerule2.png';
+import RULE_3_URL from '../assets/rules/gamerule3.png';
+import RULE_4_URL from '../assets/rules/gamerule4.png';
+import RULE_5_URL from '../assets/rules/gamerule5.png';
+import RULE_6_URL from '../assets/rules/gamerule6.png';
 
 import {Sprite} from 'pixi.js';
 
