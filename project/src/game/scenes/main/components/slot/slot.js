@@ -21,11 +21,13 @@ export function SlotMachine({view, table}) {
     const reels =
         view.children
             .filter(isReel)
+            .sort((a, b) => id(a) - id(b))
             .map((view, index) => Reel({
                 view,
                 table: table[index],
-            }))
-            .sort((a, b) => a.index - b.index);
+            }));
+
+    console.log(reels.map(({table}) => table));
 
     return {
         get reels() {
@@ -56,6 +58,10 @@ export function SlotMachine({view, table}) {
     }
 }
 
+function id(view) {
+    return Number(view.name.split('@')[1]);
+}
+
 function Texture(icon) {
     if (!Texture.config) {
         const {textures} = app.resource.get('symbols');
@@ -79,7 +85,7 @@ function Symbol(view, index) {
     const initPos = index * stopPerSymbol;
     let displayPos = initPos;
 
-    let idx = Number(view.name.split('@')[1]);
+    let idx = id(view);
     let icon = idx;
 
     return {
@@ -146,7 +152,7 @@ function Symbol(view, index) {
 
 function Reel({view, table}) {
     const name = view.name;
-    const index = Number(view.name.split('@')[1]);
+    const index = id(view);
 
     const symbols =
         view.children
@@ -214,7 +220,7 @@ function Reel({view, table}) {
     reel.table = table;
 
     symbols.forEach((symbol) =>
-        symbol.icon = nth(symbol.idx, table));
+        symbol.icon = nth(symbol.idx, reel.table));
 
     app.on('SpinStart', () =>
         symbols.forEach((symbol) => symbol.visible = true));
