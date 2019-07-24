@@ -1,4 +1,4 @@
-import {log, table, divide, isDevMode} from '@kayac/utils';
+import {log, table, divide, isDevMode, wait} from '@kayac/utils';
 
 import {NormalGame, ReSpinGame} from './flow';
 
@@ -77,6 +77,8 @@ export function logic({slot, effects, background}) {
         }
 
         app.user.jackPot = jackPot;
+
+        if (app.user.lastWin) await wait(750);
 
         log('Round Complete...');
         app.emit('Idle');

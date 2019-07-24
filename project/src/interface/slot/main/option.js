@@ -326,7 +326,7 @@ export function Options(view) {
                     (currentOpen === 'speed') ? refresh(app.user.speed) :
                         undefined;
 
-            backFunc = async function() {
+            backFunc = async () => {
                 app.sound.play('option');
                 await setScale(false, ...targets);
                 setIcons(true);
