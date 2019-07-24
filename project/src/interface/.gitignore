@@ -92,4 +92,4 @@ typings/
 .DS_Store
 ignore/
 dist/
-# assets/
+assets/
