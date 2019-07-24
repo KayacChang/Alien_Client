@@ -1,5 +1,5 @@
 import {spin, show} from '../anim';
-import {log} from '../../../../../general';
+import {log} from '@kayac/utils';
 
 import {process} from './index';
 

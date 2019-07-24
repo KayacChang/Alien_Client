@@ -1,6 +1,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import {select, remove, fetchJSON, isProduction} from './general';
+import {select, fetchJSON, isDevMode} from '@kayac/utils';
 
 import {App} from './system/application';
 import {Service} from './service/01';
@@ -20,7 +20,8 @@ async function main() {
 
         global.ENV = {
             SERVICE_URL:
-                isProduction() ? res['prodServerURL'] : res['devServerURL'],
+                isDevMode() ?
+                    res['devServerURL'] : res['prodServerURL'],
 
             LOGIN_TYPE: res['loginType'],
             GAME_ID: res['gameID'],
@@ -40,7 +41,7 @@ async function main() {
 
         const comp = select('#app');
         const svg = select('#preload');
-        remove(svg);
+        svg.remove();
 
         comp.prepend(app.view);
 
@@ -70,13 +71,13 @@ async function main() {
 
         app.stage.removeChild(loadScene);
 
-        select('script').forEach(remove);
+        select('script').forEach((el) => el.remove());
 
         app.resize();
 
         document.title = translate('title');
 
-        app.emit('Idle');
+
         //
     } catch (error) {
         console.error(error);

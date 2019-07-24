@@ -3,7 +3,7 @@ import {
     currencyFormat,
     toValue,
     signFormat,
-} from '../../../general';
+} from '@kayac/utils';
 import anime from 'animejs';
 
 export function Status(view) {

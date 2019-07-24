@@ -2,7 +2,7 @@ import {Openable} from '../../components/Openable';
 import {Clickable, ToggleButton, RangeSlider} from '../../components';
 
 import anime from 'animejs';
-import {kFormat, kCurrencyFormat, rgbToHex} from '../../../general';
+import {kFormat, kCurrencyFormat, rgb2hex} from '@kayac/utils';
 
 export function Setting(menu) {
     const setting = Openable(
@@ -83,7 +83,8 @@ export function Setting(menu) {
         .content.text = kCurrencyFormat(app.user.betOptions[0]);
     setting
         .getChildByName(`label@betLevel_max`)
-        .content.text = kCurrencyFormat(
+        .content.text =
+        kCurrencyFormat(
             app.user.betOptions[app.user.betOptions.length - 1]
         );
 
@@ -175,8 +176,7 @@ function Toggle(setting, target) {
             update() {
                 const [r, g, b] = ball._color.match(/\d+/g).map(Number);
 
-                ball.tint =
-                    parseInt(rgbToHex([r, g, b]).replace('#', '0x'), 16);
+                ball.tint = rgb2hex([r, g, b]);
             },
         });
     }
@@ -251,7 +251,9 @@ function Slider(setting, target, {range, onchange}) {
         if (!enable) return;
         const {x} = data.getLocalPosition(frame);
 
-        const level = moveRange.findIndex((range) => range > x);
+        const level =
+            (x < moveRange[1] / 2) ? 0 :
+                moveRange.findIndex((range) => range > x);
 
         setLevel(level);
     }

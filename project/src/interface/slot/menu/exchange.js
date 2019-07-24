@@ -4,7 +4,7 @@ import {ToggleButton, Clickable, Openable} from '../../components';
 
 import {
     currencyFormat, log10,
-} from '../../../general';
+} from '@kayac/utils';
 
 const key = process.env.KEY;
 

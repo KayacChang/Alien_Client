@@ -1,5 +1,5 @@
 import {Normal, ReSpin} from './Board';
-import {nextFrame, wait} from '../../../../general';
+import {nextFrame, wait} from '@kayac/utils';
 import {Alien} from './Alien';
 import {shake} from '../effect';
 import {BigWin} from './BigWin';
@@ -33,7 +33,7 @@ export function Background(view) {
     function init() {
         boardEffect.visible = false;
 
-        app.once('Idle', () => nextFrame().then(onIdle));
+        onIdle();
 
         return {
             bigwin,
@@ -55,6 +55,8 @@ export function Background(view) {
         };
 
         async function onIdle() {
+            await nextFrame();
+
             await showAlien();
 
             await wait(500);
@@ -62,6 +64,8 @@ export function Background(view) {
             normalBoard.show();
 
             await hideAlien();
+
+            app.emit('Idle');
         }
     }
 

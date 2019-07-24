@@ -3,7 +3,7 @@ import {Container, Text} from 'pixi.js';
 import anime from 'animejs';
 import {setBehaviour} from './button';
 
-import {pi, clone} from '../../../general';
+import {pi, clone} from '@kayac/utils';
 
 const {assign} = Object;
 

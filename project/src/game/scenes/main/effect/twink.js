@@ -1,5 +1,5 @@
 import {fadeIn, fadeOut} from './fade';
-import {divide} from '../../../../general';
+import {divide} from '@kayac/utils';
 
 export async function twink({targets, duration = 0, interval = 500}) {
     if (!targets.length) targets = [targets];

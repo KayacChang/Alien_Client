@@ -1,4 +1,4 @@
-import {log, table, divide, isProduction} from '../../../../general';
+import {log, table, divide, isDevMode} from '@kayac/utils';
 
 import {NormalGame, ReSpinGame} from './flow';
 
@@ -15,13 +15,12 @@ export function logic({slot, effects, background}) {
         bigwin, boardEffect, normalBoard,
     } = background;
 
-    if (!isProduction()) {
-        global.test = function() {
-            app.service
-                .sendOneTest({bet: 1})
-                .then((result) => app.emit('GameResult', result));
-        };
-    }
+    global.test = () => {
+        if (!isDevMode()) return;
+        app.service
+            .sendOneTest({bet: 1})
+            .then((result) => app.emit('GameResult', result));
+    };
 
     async function onGameResult(result) {
         log('onGameResult =============');
@@ -51,7 +50,7 @@ export function logic({slot, effects, background}) {
 
         app.user.lastWin = scores;
 
-        if (!result.isJackpot && isBigWin(scores)) await playBigWin(scores);
+        if (!normalGame.isJackpot && isBigWin(scores)) await playBigWin(scores);
 
         app.user.cash += scores;
 

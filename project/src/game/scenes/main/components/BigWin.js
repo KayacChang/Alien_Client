@@ -1,4 +1,4 @@
-import {wait} from '../../../../general';
+import {wait} from '@kayac/utils';
 import {currencyChange, fadeIn, fadeOut, popIn} from '../effect';
 
 import {extras} from 'pixi.js';

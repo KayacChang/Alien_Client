@@ -1,4 +1,4 @@
-import {throttle, abs, select} from '../../general';
+import {throttle, abs, select} from '@kayac/utils';
 
 import {isMobile} from 'pixi.js/lib/core/utils';
 

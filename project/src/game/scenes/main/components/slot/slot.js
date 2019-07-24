@@ -5,10 +5,10 @@ import {
     nth,
     mod,
     round,
-} from '../../../../../general';
+    mRound,
+} from '@kayac/utils';
 
 import {stopPerSymbol, symbolConfig} from '../../data';
-import {mRound} from '../../../../../general';
 
 export function SlotMachine({view, table}) {
     const empty =

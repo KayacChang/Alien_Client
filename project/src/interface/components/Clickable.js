@@ -1,4 +1,4 @@
-import {throttle, isMobile} from '../../general';
+import {throttle, isMobile} from '@kayac/utils';
 
 const {defineProperties} = Object;
 

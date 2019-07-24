@@ -2,7 +2,7 @@ import LOAD_URL from './assets/sprite_sheets/load.fui';
 import LOAD_ATLAS0_URL from './assets/sprite_sheets/load@atlas0.png';
 
 import {addPackage} from 'pixi_fairygui';
-import {log} from '../../../general';
+import {log} from '@kayac/utils';
 import {LoadingBar} from './components/LoadingBar';
 
 export function reserve() {

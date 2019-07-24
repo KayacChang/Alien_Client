@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import {wait} from '../../../../../general';
+import {wait} from '@kayac/utils';
 import {
     MAYBE_BONUS_DURATION,
     getSpinStopInterval,

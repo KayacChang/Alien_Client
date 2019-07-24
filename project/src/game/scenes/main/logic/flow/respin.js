@@ -1,4 +1,4 @@
-import {randomInt} from '../../../../../general';
+import {randomInt} from '@kayac/utils';
 import anime from 'animejs';
 import {shake} from '../../effect';
 import {NormalGame} from './normal';
@@ -42,7 +42,7 @@ function setEvents({background, reels}) {
     app.on('SpinStart', onSpinStart);
     app.on('ShowResult', onShowResult);
     app.on('Attraction', onAttraction);
-    app.on('SpinEnd', stopAttraction);
+    app.on('SpinEnd', onSpinEnd);
 
     return {off};
 
@@ -50,7 +50,7 @@ function setEvents({background, reels}) {
         app.off('SpinStart', onSpinStart);
         app.off('ShowResult', onShowResult);
         app.off('Attraction', onAttraction);
-        app.off('SpinEnd', stopAttraction);
+        app.off('SpinEnd', onSpinEnd);
     }
 
     function onSpinStart() {
@@ -76,6 +76,10 @@ function setEvents({background, reels}) {
             duration: 2000,
             amplitude: 12,
         });
+    }
+
+    function onSpinEnd() {
+        stopAttraction();
     }
 }
 

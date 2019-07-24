@@ -1,7 +1,7 @@
 import {Clickable, defaultFont} from '../../components';
 import {setBehaviour} from './button';
 import anime from 'animejs';
-import {kCurrencyFormat, toValue} from '../../../general';
+import {kCurrencyFormat, toValue} from '@kayac/utils';
 
 function setScale(open, ...targets) {
     const tasks =

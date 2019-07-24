@@ -24,8 +24,8 @@ export function reserve() {
 const stopPerSymbol = 2;
 
 const MAYBE_BONUS_DURATION = 1000;
-const getSpinDuration = () => [1500, 1200, 900][app.user.speed];
-const getSpinStopInterval = () => [240, 210, 180][app.user.speed];
+const getSpinDuration = () => [2100, 1800, 900][app.user.speed];
+const getSpinStopInterval = () => [360, 300, 180][app.user.speed];
 
 export {
     stopPerSymbol,

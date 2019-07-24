@@ -2,7 +2,7 @@ import {extras} from 'pixi.js';
 
 const {BitmapText} = extras;
 
-import {currencyFormat, wait} from '../../../../general';
+import {currencyFormat, wait} from '@kayac/utils';
 import {currencyChange, fadeIn, fadeOut} from '../effect';
 import anime from 'animejs';
 
@@ -59,6 +59,10 @@ export function Normal(view) {
 
             const allSame =
                 symbols.every((symbol) => symbols[0] === symbol);
+            const secondThirdSame =
+                symbols[1] === symbols[2];
+            const firstSecondSame =
+                symbols[0] === symbols[1];
             const firstThirdSame =
                 symbols[0] === symbols[2];
 
@@ -79,10 +83,10 @@ export function Normal(view) {
                     name = table[symbols[0]];
                     //
                 }
-            } else if (firstReelWild) {
+            } else if (firstReelWild && secondThirdSame) {
                 name = table[symbols[1]];
                 //
-            } else if (thirdReelWild || allSame) {
+            } else if ((thirdReelWild && firstSecondSame) || allSame) {
                 name = table[symbols[0]];
                 //
             }

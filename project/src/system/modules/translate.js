@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Fetch from 'i18next-fetch-backend';
-import {isProduction} from '../../general';
+import {isDevMode} from '@kayac/utils';
 
 
 const detectorOptions = {
@@ -47,7 +47,7 @@ export function Translate() {
         .use(LanguageDetector)
         .use(Fetch)
         .init({
-            debug: isProduction(),
+            debug: isDevMode(),
 
             fallbackLng: 'zh-TW',
 

@@ -1,5 +1,5 @@
 import {getSearchParam} from '../utils';
-import {clone, err} from '../../general';
+import {clone, err} from '@kayac/utils';
 import {User} from '../user';
 
 const {assign, entries, fromEntries} = Object;
