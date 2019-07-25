@@ -1,7 +1,7 @@
 import {Normal, ReSpin} from './Board';
 import {nextFrame, wait} from '@kayac/utils';
 import {Alien} from './Alien';
-import {shake} from '../effect';
+import {fadeIn, shake} from '../effect';
 import {BigWin} from './BigWin';
 
 export function Background(view) {
@@ -55,17 +55,21 @@ export function Background(view) {
         };
 
         async function onIdle() {
+            app.control.alpha = 0;
+            app.control.visible = false;
+
             await nextFrame();
 
             await showAlien();
-
-            await wait(500);
 
             normalBoard.show();
 
             await hideAlien();
 
+            app.control.visible = true;
             app.emit('Idle');
+
+            await fadeIn({targets: app.control, duration: 500}).finished;
         }
     }
 
