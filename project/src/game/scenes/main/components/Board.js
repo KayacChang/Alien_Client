@@ -37,9 +37,9 @@ export function Normal(view) {
 
     function init() {
         const table = {
-            '1': '5x',
+            '1': '2x',
             '2': '3x',
-            '3': '2x',
+            '3': '5x',
             '4': 'seven',
             '5': '3bar',
             '6': '2bar',
@@ -83,10 +83,10 @@ export function Normal(view) {
                     name = table[symbols[0]];
                     //
                 }
-            } else if (firstReelWild && secondThirdSame) {
+            } else if (bothReelWild || (firstReelWild && secondThirdSame)) {
                 name = table[symbols[1]];
                 //
-            } else if ((thirdReelWild && firstSecondSame) || allSame) {
+            } else if (allSame || (thirdReelWild && firstSecondSame)) {
                 name = table[symbols[0]];
                 //
             }
