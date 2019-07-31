@@ -27,8 +27,6 @@ export function SlotMachine({view, table}) {
                 table: table[index],
             }));
 
-    console.log(reels.map(({table}) => table));
-
     return {
         get reels() {
             return reels;

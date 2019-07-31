@@ -12,6 +12,8 @@ const empty =
         .find(({name}) => name === 'empty')
         .id;
 
+let isQuickStop = false;
+
 export async function spin({reels, symbols, func}) {
     if (!reels.length) reels = [reels];
 
@@ -27,16 +29,19 @@ async function duration() {
 
     let time = getSpinDuration();
 
-    app.on('QuickStop', () => time = 0);
-
     while (time > 0) {
         await wait(10);
-        time -= 10;
+
+        if (isQuickStop) time = 0;
+        else time -= 10;
     }
 }
 
 async function start(reels) {
     app.emit('SpinStart');
+
+    isQuickStop = false;
+    app.once('QuickStop', () => isQuickStop = true);
 
     for (const reel of reels) {
         anime
@@ -66,8 +71,7 @@ async function stop(reels, icons, func) {
 
     let isMaybeBonus = false;
 
-    let interval = getSpinStopInterval();
-    app.on('QuickStop', () => interval = 0);
+    const interval = getSpinStopInterval();
 
     for (const reel of reels) {
         const index = reel.index;
