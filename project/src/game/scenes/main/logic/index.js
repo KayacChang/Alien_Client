@@ -35,8 +35,6 @@ export function logic({slot, effects, background}) {
             jackPot,
         } = result;
 
-        app.user.jackPot = jackPot;
-
         if (normalGame.hasLink) {
             log('onNormalGame =============');
             table(normalGame);
@@ -79,6 +77,8 @@ export function logic({slot, effects, background}) {
         }
 
         if (app.user.lastWin) await wait(750);
+
+        app.user.jackPot = jackPot;
 
         log('Round Complete...');
         app.emit('Idle');

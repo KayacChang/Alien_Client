@@ -13,6 +13,21 @@ function isJackPot({symbols}) {
         .includes(symbols.join());
 }
 
+function clearJackPot({symbols}) {
+    const key = {
+        '1': '2x',
+        '2': '3x',
+        '3': '5x',
+    } [symbols[1]];
+
+    const newJackpot = {...app.user.jackPot};
+
+    newJackpot[key] = 0;
+
+    app.user.jackPot = newJackpot;
+}
+
+
 export async function NormalGame({result, reels, effects, func, background}) {
     const {jackpot, boardEffect} = background;
 
@@ -29,6 +44,8 @@ export async function NormalGame({result, reels, effects, func, background}) {
             await boardEffect.jackpot.show();
 
             await jackpot.play(scores);
+
+            clearJackPot(result);
 
             result.isJackpot = true;
         }

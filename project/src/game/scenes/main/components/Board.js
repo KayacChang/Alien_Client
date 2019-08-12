@@ -219,6 +219,8 @@ function JackPot(view) {
 
     view.score = getScore();
 
+    view.text = currencyFormat(view.score);
+
     view.scale.set(1);
 
     view.getScore = getScore;
