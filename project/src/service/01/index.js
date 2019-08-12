@@ -49,7 +49,7 @@ export function Service(prodKey) {
 
     function construct() {
         const token =
-            getSearchParam('token') || sessionStorage.getItem('accounttoken');
+            getSearchParam('token') || localStorage.getItem('accounttoken');
 
         if (!token) {
             // @TODO Maybe Popup an Alert before redirect to game hall.
@@ -63,7 +63,7 @@ export function Service(prodKey) {
 
         global.addEventListener('popstate', () => history.back());
 
-        sessionStorage.setItem('accounttoken', token);
+        localStorage.setItem('accounttoken', token);
 
         return token;
     }
