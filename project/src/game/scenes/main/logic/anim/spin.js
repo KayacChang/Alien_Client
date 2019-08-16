@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import {wait} from '@kayac/utils';
+import {nextFrame, wait} from '@kayac/utils';
 import {
     MAYBE_BONUS_DURATION,
     getSpinStopInterval,
@@ -30,10 +30,15 @@ async function duration() {
     let time = getSpinDuration();
 
     while (time > 0) {
-        await wait(10);
+        const t0 = performance.now();
 
-        if (isQuickStop) time = 0;
-        else time -= 10;
+        await nextFrame();
+
+        const t1 = performance.now();
+
+        if (isQuickStop) return time = 0;
+
+        time -= (t1 - t0);
     }
 }
 
