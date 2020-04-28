@@ -1,38 +1,25 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import {select, fetchJSON, isDevMode} from '@kayac/utils';
+import {select} from '@kayac/utils';
 
-import {App} from './system/application';
-import {Service} from './service/01';
-import {enableFullScreenMask} from './system/modules/screen';
-
-import ENV_URL from './env.json';
+import app from './system/application';
+import {Service} from './service';
+import Swal from './system/plugin/swal';
 import {Translate} from './system/modules/translate';
 
-const key = process.env.KEY;
+import {enableFullScreenMask} from './system/modules/screen';
 
 async function main() {
     //  Init App
     try {
         document.title = 'For Every Gamer | 61 Studio';
 
-        const res = await fetchJSON(ENV_URL);
+        global.app = app;
 
-        global.ENV = {
-            SERVICE_URL:
-                isDevMode() ?
-                    res['devServerURL'] : res['prodServerURL'],
+        global.translate = await Translate(process.env.I18N_URL);
 
-            LOGIN_TYPE: res['loginType'],
-            GAME_ID: res['gameID'],
-            I18N_URL: res['i18nURL'],
-        };
-
-        global.translate = await Translate();
-
-        global.app = App();
-
-        app.service = new Service(key);
+        app.alert = Swal();
+        app.service = new Service(process.env.SERVER_URL);
 
         // Import Load Scene
         const LoadScene = await import('./game/scenes/load/scene');
@@ -51,15 +38,12 @@ async function main() {
 
         enableFullScreenMask();
 
-        await app.service.login({key});
-
         //  Import Main Scene
-        const [MainScene, UserInterface, initData] =
-            await Promise.all([
-                import('./game/scenes/main'),
-                import('./interface/slot'),
-                app.service.init({key}),
-            ]);
+        const [MainScene, UserInterface, initData] = await Promise.all([
+            import('./game/scenes/main'),
+            import('./interface/slot'),
+            app.service.init(),
+        ]);
 
         await app.resource.load(MainScene, UserInterface);
 
@@ -76,7 +60,6 @@ async function main() {
         app.resize();
 
         document.title = translate('title');
-
 
         //
     } catch (error) {

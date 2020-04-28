@@ -3,7 +3,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Fetch from 'i18next-fetch-backend';
 import {isDevMode} from '@kayac/utils';
 
-
 const detectorOptions = {
     // order and from where user language should be detected
     order: [
@@ -42,7 +41,7 @@ const backendOptions = {
     },
 };
 
-export function Translate() {
+export function Translate(url) {
     return i18next
         .use(LanguageDetector)
         .use(Fetch)
@@ -54,7 +53,7 @@ export function Translate() {
             detection: detectorOptions,
             backend: backendOptions,
 
-            loadPath: ENV.I18N_URL,
+            loadPath: url,
 
             ns: ['alien', 'common'],
             defaultNS: 'alien',

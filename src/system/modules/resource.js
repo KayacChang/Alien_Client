@@ -4,9 +4,10 @@ import {Howl} from 'howler';
 
 import {load as loadFont} from 'webfontloader';
 
-export function Resource({loader}) {
+export function Resource(app) {
+    const loader = app.loader;
     loader
-    //  For Sound Loading
+        //  For Sound Loading
         .pre(SoundHandler)
         //  For Font Loading
         .pre(WebFontLoader);
@@ -23,26 +24,23 @@ export function Resource({loader}) {
     }
 
     function fetch(...tasks) {
-        const _tasks =
-            tasks.filter((name) => !loader.resources[name]);
+        const _tasks = tasks.filter((name) => !loader.resources[name]);
 
         loader.add(_tasks);
 
         return new Promise((resolve) => {
             if (_tasks.length === 0) {
-                const results =
-                    tasks.map((task) => {
-                        return loader.resources[task];
-                    });
+                const results = tasks.map((task) => {
+                    return loader.resources[task];
+                });
 
                 return resolve(results);
             }
 
             loader.load((loader, resources) => {
-                const results =
-                    tasks.map((task) => {
-                        return resources[task];
-                    });
+                const results = tasks.map((task) => {
+                    return resources[task];
+                });
 
                 resolve(results);
             });
@@ -53,22 +51,19 @@ export function Resource({loader}) {
         scenes
             .map(({reserve}) => reserve())
             .forEach((tasks) => {
-                const soundTasks =
-                    tasks
-                        .filter(({type}) => type === 'sound')
-                        .map((res) => {
-                            const task = new loaders.Resource(
-                                res.name, '', {
-                                    loadType: loaders.Resource.LOAD_TYPE.AUDIO,
-                                });
-
-                            task.metadata = res;
-
-                            return task;
+                const soundTasks = tasks
+                    .filter(({type}) => type === 'sound')
+                    .map((res) => {
+                        const task = new loaders.Resource(res.name, '', {
+                            loadType: loaders.Resource.LOAD_TYPE.AUDIO,
                         });
 
-                const normals =
-                    tasks.filter(({type}) => type !== 'sound');
+                        task.metadata = res;
+
+                        return task;
+                    });
+
+                const normals = tasks.filter(({type}) => type !== 'sound');
 
                 return loader.add([...normals, ...soundTasks]);
             });
@@ -115,20 +110,17 @@ export function Resource({loader}) {
     }
 }
 
-
 function WebFontLoader(resource, next) {
     if (check()) return next();
 
     loadFont({
-        ...(resource.metadata),
+        ...resource.metadata,
         active,
         inactive,
     });
 
     function check() {
-        return (
-            !resource || resource.name !== 'font'
-        );
+        return !resource || resource.name !== 'font';
     }
 
     function active() {
@@ -142,4 +134,3 @@ function WebFontLoader(resource, next) {
         next();
     }
 }
-
