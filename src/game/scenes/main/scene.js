@@ -8,7 +8,7 @@ import {fadeIn, fadeOut, moveIn, moveOut, popIn} from './effect';
 import {extras} from 'pixi.js';
 const {BitmapText} = extras;
 
-export function create({normalTable}) {
+export function create({normalreel}) {
     const create = addPackage(app, 'main');
     const scene = create('MainScene');
 
@@ -17,17 +17,14 @@ export function create({normalTable}) {
     function init() {
         const slot = SlotMachine({
             view: scene,
-            table: normalTable,
+            table: normalreel,
         });
 
-        const effects =
-            scene.children
-                .filter(({name}) => name && name.includes('effect'))
-                .sort((a, b) => id(a) - id(b));
+        const effects = scene.children
+            .filter(({name}) => name && name.includes('effect'))
+            .sort((a, b) => id(a) - id(b));
 
-        const background = Background(
-            select('background'),
-        );
+        const background = Background(select('background'));
 
         const style = {font: '36px Score'};
         const score = new BitmapText('0', style);
@@ -56,7 +53,7 @@ export function create({normalTable}) {
             await fadeIn({targets, alpha: 0.7}).finished;
 
             score.text = scores;
-            score.anchor.set(.5);
+            score.anchor.set(0.5);
 
             const start = select('pos_start@score');
             const end = select('pos_end@score');
@@ -86,11 +83,10 @@ export function create({normalTable}) {
             });
         });
 
-        const lights =
-            scene.children
-                .filter(({name}) => name && name.includes('light'))
-                .sort((a, b) => id(a) - id(b))
-                .map(Light);
+        const lights = scene.children
+            .filter(({name}) => name && name.includes('light'))
+            .sort((a, b) => id(a) - id(b))
+            .map(Light);
 
         app.on('MaybeBonus', onMaybeBonus);
 
@@ -102,7 +98,8 @@ export function create({normalTable}) {
             background,
         });
 
-        app.alert.request({title: translate(`common:message.audio`)})
+        app.alert
+            .request({title: translate(`common:message.audio`)})
             .then(({value}) => {
                 app.sound.mute(!value);
 

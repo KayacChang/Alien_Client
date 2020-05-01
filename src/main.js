@@ -45,10 +45,23 @@ async function main() {
             app.service.init(),
         ]);
 
+        app.user.id = initData['player']['id'];
+        app.user.cash = initData['player']['money'];
+
+        app.user.betOptions = initData['betrate']['betrate'];
+        app.user.betOptionsHotKey = initData['betrate']['betratelinkindex'];
+        app.user.bet = initData['betrate']['betratedefaultindex'];
+
+        app.user.jackPot = {
+            '5x': initData['attach']['JackPartBonusPoolx5'],
+            '3x': initData['attach']['JackPartBonusPoolx3'],
+            '2x': initData['attach']['JackPartBonusPoolx2'],
+        };
+
         await app.resource.load(MainScene, UserInterface);
 
-        const ui = UserInterface.create(initData);
-        const scene = MainScene.create(initData);
+        const ui = UserInterface.create();
+        const scene = MainScene.create(initData.reel);
         scene.addChild(ui);
 
         app.stage.addChildAt(scene, 0);
