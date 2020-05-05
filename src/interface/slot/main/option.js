@@ -4,26 +4,22 @@ import anime from 'animejs';
 import {kCurrencyFormat, toValue} from '@kayac/utils';
 
 function setScale(open, ...targets) {
-    const tasks =
-        targets.map((it) => {
-            const state =
-                open ? it.originScale : {x: 0, y: 0};
+    const tasks = targets.map((it) => {
+        const state = open ? it.originScale : {x: 0, y: 0};
 
-            return anime({
-                targets: it.scale,
-                ...(state),
-                duration: 260,
-                easing: 'easeOutExpo',
-            }).finished;
-        });
+        return anime({
+            targets: it.scale,
+            ...state,
+            duration: 260,
+            easing: 'easeOutExpo',
+        }).finished;
+    });
 
     return Promise.all(tasks);
 }
 
 export function Options(view) {
-    const btn = Clickable(
-        view.getChildByName('btn@option'),
-    );
+    const btn = Clickable(view.getChildByName('btn@option'));
     const btnIcon = view.getChildByName('img@option');
     btnIcon.originScale = {
         x: btnIcon.scale.x,
@@ -35,9 +31,7 @@ export function Options(view) {
         y: btnFrame.scale.y,
     };
 
-    const menu = OptionMenu(
-        view.getChildByName('optionMenu'),
-    );
+    const menu = OptionMenu(view.getChildByName('optionMenu'));
     menu.originScale = {
         x: menu.scale.x,
         y: menu.scale.y,
@@ -69,77 +63,62 @@ export function Options(view) {
     }
 
     function OptionMenu(menu) {
-        const btns =
-            getChildren('btn')
-                .map((it) => {
-                    it = Clickable(it);
-                    it = setBehaviour(it);
-                    return it;
-                });
+        const btns = getChildren('btn').map((it) => {
+            it = Clickable(it);
+            it = setBehaviour(it);
+            return it;
+        });
 
         menu.btns = btns;
 
-        let btnsFunc = [
-            setSpeed,
-            setAuto,
-            setBet,
-            setAudio,
-            setExchange,
-        ];
+        let btnsFunc = [setSpeed, setAuto, setBet, setAudio];
 
         let backFunc = setBack;
 
-        const backBtn = Clickable(
-            menu.getChildByName('back'),
-        );
+        const backBtn = Clickable(menu.getChildByName('back'));
 
-        setBehaviour(backBtn)
-            .on('Click', () => backFunc());
+        setBehaviour(backBtn).on('Click', () => backFunc());
 
         btns.forEach((btn) => {
             const index = btn.name.split('@')[1];
+
             btn.on('Click', () => btnsFunc[index]());
         });
 
-        const numbers =
-            getChildren('num')
-                .map((num) => {
-                    const text = num.getChildByName('content');
-                    defaultFont(text.content, {fontFamily: 'Candal'});
+        const numbers = getChildren('num').map((num) => {
+            const text = num.getChildByName('content');
+            defaultFont(text.content, {fontFamily: 'Candal'});
 
-                    num.originScale = {x: 1, y: 1};
+            num.originScale = {x: 1, y: 1};
 
-                    return num;
-                });
+            return num;
+        });
 
-        const icons =
-            getChildren('img')
-                .filter(({name}) => !name.includes('back'))
-                .map((icon) => {
-                    const {x, y} = icon.scale;
-                    icon.originScale = {x, y};
+        const icons = getChildren('img')
+            .filter(({name}) => !name.includes('back'))
+            .map((icon) => {
+                const {x, y} = icon.scale;
+                icon.originScale = {x, y};
 
-                    if (icon.name.includes('audio')) {
-                        icon.originScale = {
-                            x: icon.scale.x,
-                            y: icon.scale.y,
-                        };
-                        if (icon.name.includes('close')) {
-                            icon.scale.set(0);
-                        }
+                if (icon.name.includes('audio')) {
+                    icon.originScale = {
+                        x: icon.scale.x,
+                        y: icon.scale.y,
+                    };
+                    if (icon.name.includes('close')) {
+                        icon.scale.set(0);
                     }
+                }
 
-                    return icon;
-                });
+                return icon;
+            });
 
-        const frames =
-            getChildren('frame')
-                .map((frame) => {
-                    const {x, y} = frame.scale;
-                    frame.originScale = {x, y};
+        const frames = getChildren('frame').map((frame, index) => {
+            const {x, y} = frame.scale;
+            frame.originScale = {x, y};
 
-                    return frame;
-                });
+            return frame;
+        });
 
         menu.checkState = checkState;
 
@@ -156,16 +135,25 @@ export function Options(view) {
             btns.forEach((btn) => {
                 const index = btn.name.split('@')[1];
 
+                if (index == 4) {
+                    btn.visible = false;
+                    frames[index].visible = false;
+
+                    return;
+                }
+
+                btn.visible = true;
+                frames[index].visible = true;
+
                 frames[index].alpha = btn.enable ? 1 : 0.3;
 
-                icons[index].tint = btn.enable ? 0xFFFFFF : 0x7B7B7B;
+                icons[index].tint = btn.enable ? 0xffffff : 0x7b7b7b;
 
                 const num = numbers[index];
 
                 if (currentOpen === 'bet') {
                     const flag =
-                        !app.user.isBetLock &&
-                        options[index] <= app.user.cash;
+                        !app.user.isBetLock && options[index] <= app.user.cash;
 
                     btn.enable = flag;
 
@@ -181,23 +169,24 @@ export function Options(view) {
 
             if (!isItemsOpen) setAudio(app.sound.mute());
 
-            (currentOpen === 'bet') ? refresh(hotKeys.indexOf(app.user.bet)) :
-                (currentOpen === 'auto') ? refresh(app.user.auto) :
-                    (currentOpen === 'speed') ? refresh(app.user.speed) :
-                        undefined;
+            if (currentOpen === 'bet') {
+                refresh(hotKeys.indexOf(app.user.bet));
+            }
+
+            if (currentOpen === 'auto') {
+                refresh(app.user.auto);
+            }
+
+            if (currentOpen === 'speed') {
+                refresh(app.user.speed);
+            }
         }
 
         function resetFunc() {
             currentOpen = undefined;
             isItemsOpen = false;
 
-            btnsFunc = [
-                setSpeed,
-                setAuto,
-                setBet,
-                setAudio,
-                setExchange,
-            ];
+            btnsFunc = [setSpeed, setAuto, setBet, setAudio];
 
             backFunc = setBack;
 
@@ -209,8 +198,7 @@ export function Options(view) {
         function setSpeed() {
             currentOpen = 'speed';
             setOptionItems(
-                app.user.speedOptions
-                    .map((level) => (level) + 'x'),
+                app.user.speedOptions.map((level) => level + 'x'),
                 update,
             );
 
@@ -224,10 +212,7 @@ export function Options(view) {
         function setAuto() {
             currentOpen = 'auto';
 
-            setOptionItems(
-                app.user.autoOptions,
-                update,
-            );
+            setOptionItems(app.user.autoOptions, update);
 
             function update(index) {
                 app.user.auto = index;
@@ -239,10 +224,7 @@ export function Options(view) {
         async function setBet() {
             currentOpen = 'bet';
 
-            setOptionItems(
-                options.map(kCurrencyFormat),
-                update,
-            );
+            setOptionItems(options.map(kCurrencyFormat), update);
 
             function update(index) {
                 app.user.bet = hotKeys[index];
@@ -266,6 +248,8 @@ export function Options(view) {
             btns.forEach((btn, index) => {
                 const num = numbers[index];
 
+                btn.visible = true;
+
                 if (currentOpen === 'bet') {
                     const flag =
                         !app.user.isBetLock &&
@@ -283,33 +267,28 @@ export function Options(view) {
                 }
             });
 
-            const targets =
-                options
-                    .map((option, index) =>
-                        numbers.find(({name}) =>
-                            name.split('@')[1] === index + ''))
-                    .filter(Boolean);
+            const targets = options
+                .map((option, index) =>
+                    numbers.find(({name}) => name.split('@')[1] === index + ''),
+                )
+                .filter(Boolean);
 
-            btnsFunc =
-                targets.map((num) => {
-                    const index = Number(
-                        num.name.split('@')[1],
-                    );
+            btnsFunc = targets.map((num) => {
+                const index = Number(num.name.split('@')[1]);
 
-                    num.index = index;
+                num.index = index;
 
-                    num.getChildByName('content')
-                        .text = `${options[index]}`;
+                num.getChildByName('content').text = `${options[index]}`;
 
-                    const enableFrame = num.getChildByName('enable');
-                    enableFrame.originScale = {x: 1, y: 1};
+                const enableFrame = num.getChildByName('enable');
+                enableFrame.originScale = {x: 1, y: 1};
 
-                    return function onClick() {
-                        func(index);
+                return function onClick() {
+                    func(index);
 
-                        app.sound.play('click');
-                    };
-                });
+                    app.sound.play('click');
+                };
+            });
 
             app.sound.play('option');
 
@@ -321,10 +300,17 @@ export function Options(view) {
                 btn.scale.set(1);
             });
 
-            (currentOpen === 'bet') ? refresh(hotKeys.indexOf(app.user.bet)) :
-                (currentOpen === 'auto') ? refresh(app.user.auto) :
-                    (currentOpen === 'speed') ? refresh(app.user.speed) :
-                        undefined;
+            if (currentOpen === 'bet') {
+                refresh(hotKeys.indexOf(app.user.bet));
+            }
+
+            if (currentOpen === 'auto') {
+                refresh(app.user.auto);
+            }
+
+            if (currentOpen === 'speed') {
+                refresh(app.user.speed);
+            }
 
             backFunc = async () => {
                 app.sound.play('option');
@@ -342,17 +328,20 @@ export function Options(view) {
 
         function setAudio(isMute) {
             const audioFrame = frames[3];
-            const disableFrame =
-                frames.find(({name}) => name.includes('disable'));
+            const disableFrame = frames.find(({name}) =>
+                name.includes('disable'),
+            );
             disableFrame.originScale = {x: 1, y: 1};
 
-            const closeIcon =
-                icons.find(({name}) => name.includes('audio_close'));
-            const openIcon =
-                icons.find(({name}) => name.includes('audio_open'));
+            const closeIcon = icons.find(({name}) =>
+                name.includes('audio_close'),
+            );
+            const openIcon = icons.find(({name}) =>
+                name.includes('audio_open'),
+            );
 
             if (isMute !== undefined) {
-                return (isMute) ? close() : open();
+                return isMute ? close() : open();
             }
 
             if (app.sound.mute()) {
@@ -374,19 +363,12 @@ export function Options(view) {
             }
         }
 
-
         function setBack() {
             setOptionMenu(false);
         }
 
-        function setExchange() {
-            view.openMenu('exchange');
-            setOptionMenu(false);
-        }
-
         function getChildren(keyword) {
-            return menu.children
-                .filter(({name}) => name.includes(keyword));
+            return menu.children.filter(({name}) => name.includes(keyword));
         }
 
         function setIcons(open) {

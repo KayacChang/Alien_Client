@@ -21,7 +21,6 @@ export function User() {
     let hasExchanged = false;
     let isBetLock = false;
 
-    let payTable = [];
     let jackPot = {};
 
     return seal({
@@ -127,13 +126,6 @@ export function User() {
         set auto(index) {
             auto = index;
             app.emit('UserAutoChange', auto);
-        },
-
-        get payTable() {
-            return payTable;
-        },
-        set payTable(newTable) {
-            payTable = newTable;
         },
 
         get jackPot() {

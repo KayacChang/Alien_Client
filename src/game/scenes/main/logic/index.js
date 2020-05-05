@@ -11,9 +11,7 @@ function isBigWin(scores) {
 export function logic({slot, effects, background}) {
     app.on('GameResult', onGameResult);
 
-    const {
-        bigwin, boardEffect, normalBoard,
-    } = background;
+    const {bigwin, boardEffect, normalBoard} = background;
 
     global.test = () => {
         if (!isDevMode()) return;
@@ -40,13 +38,12 @@ export function logic({slot, effects, background}) {
             table(normalGame);
         }
 
-        const scores =
-            await NormalGame({
-                result: normalGame,
-                reels: slot.reels,
-                effects,
-                background,
-            });
+        const scores = await NormalGame({
+            result: normalGame,
+            reels: slot.reels,
+            effects,
+            background,
+        });
 
         app.user.lastWin = scores;
 
@@ -58,18 +55,19 @@ export function logic({slot, effects, background}) {
             log('onReSpinGame =============');
             table({
                 round: reSpinGame.length,
-                totalScores:
-                    reSpinGame.reduce((sum, {scores}) => sum + scores, 0),
+                totalScores: reSpinGame.reduce(
+                    (sum, {scores}) => sum + scores,
+                    0,
+                ),
             });
             reSpinGame.forEach(table);
 
-            const scores =
-                await ReSpinGame({
-                    results: reSpinGame,
-                    reels: slot.reels[1],
-                    effects,
-                    background,
-                });
+            const scores = await ReSpinGame({
+                results: reSpinGame,
+                reels: slot.reels[1],
+                effects,
+                background,
+            });
 
             if (isBigWin(scores)) await playBigWin(scores);
 
@@ -92,4 +90,3 @@ export function logic({slot, effects, background}) {
         if (normalBoard.alpha !== 1) await normalBoard.show();
     }
 }
-
